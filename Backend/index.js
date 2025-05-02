@@ -37,7 +37,7 @@ app.get("/",(req,res)=>
     res.send("Hello World!!!");
 })
 app.use('/api/auth', userRoutes);
-app.use('/api/v1/pet', petRoutes);
+app.use('/api/pet', petRoutes);
 app.use('/api/training', trainingRoutes);
 
 
