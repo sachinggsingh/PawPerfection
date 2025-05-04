@@ -1,8 +1,15 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
 import {useState} from 'react'
+import { useNavigate } from 'react-router-dom';
+import { useSelector,useDispatch } from 'react-redux';
+import { login } from '../redux/auth/loginSlice';
+import {Loader} from  'lucide-react'
 
 const Login = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const {user,loading,error} = useSelector((state) => state.auth)
 	const [formData , setFormData] = useState({
 		email : '',
 		password : ''
@@ -14,11 +21,49 @@ const Login = () => {
 		  [name]: value
 		}));
 	  };
-	  const handleForm =(e)=>
-	  {
-		e.preventDefault()
-		console.log(formData)
-	  }
+	 const handleForm = async(e)=>
+   {
+    e.preventDefault()
+    try{
+      const response = await dispatch(login(formData)).unwrap()
+      if(response.token){
+        navigate('/')
+      }
+    }
+    catch(err){
+      console.log(err)
+    }
+   }
+  if(loading)
+  {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <Loader className="animate-spin" size={24} />
+      </div>
+    );
+  }
+  if(error){
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
+  if(user && user.token){
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <p className="text-green-500">Login successful</p>
+      </div>
+    );
+  }
+  if(!user && !loading && !error && formData.token){
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <p className="text-red-500">Login failed</p>
+      </div>
+    );
+  }
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

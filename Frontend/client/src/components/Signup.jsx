@@ -1,7 +1,14 @@
 import React from 'react';
-import {Link } from 'react-router-dom'
+import {Link , useNavigate} from 'react-router-dom'
 import {useState} from 'react'
+import {useDispatch} from 'react-redux'
+import {register} from '../redux/auth/loginSlice'
+import { useSelector } from 'react-redux';
+import {Loader} from  'lucide-react'
 const SignUp = () => {
+  const {loading,error} = useSelector((state) => state.auth)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [formData,setFormData] = useState({
     email:'',
     password : '',
@@ -16,10 +23,44 @@ const SignUp = () => {
       [name]:value
     }))
   }
-  const handleSignUp = (e)=>
+  const handleSignUp = async (e)=>
   {
-    e.preventDefault()
-    console.log(formData);
+    e.preventDefault();
+    if(formData.password !== formData.confirmPassword){
+      alert("Passwords do not match")
+      return
+    }
+    try{
+      const response = await dispatch(register(formData)).unwrap()
+      if(response.token){
+        navigate('/')
+      }
+    }
+    catch(err){
+      console.log(err)
+    }
+  }
+  if(loading)
+  {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <Loader className="animate-spin" size={24} />
+      </div>
+    );
+  }
+  if(error){
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
+  if(!loading && !error && formData.token){
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <p className="text-green-500">Successfully signed up</p>
+      </div>
+    );
   }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -62,8 +103,8 @@ const SignUp = () => {
               placeholder="xyz@gmail.com"
               className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-violet-600"
               name="email"
-              onChange={handleChange}
               value={formData.value}
+              onChange={handleChange}
               required
             />
           </div>
@@ -79,9 +120,9 @@ const SignUp = () => {
               id="password"
               placeholder="••••••••"
               className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-violet-600"
-              name="email"
-              onChange={handleChange}
+              name="password"
               value={formData.value}
+              onChange={handleChange}
               minLength={6}
               required
             />
@@ -98,9 +139,9 @@ const SignUp = () => {
               id="password"
               placeholder="••••••••"
               className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-violet-600"
-              onChange={handleChange}
               name="confirmPassword"
               value={formData.value}
+              onChange={handleChange}
               required
             />
           </div>
