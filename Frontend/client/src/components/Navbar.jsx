@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Home, Info, Settings, Mail, PawPrint } from 'lucide-react';
+import { SignedIn, SignedOut, UserButton, SignInButton } from '@clerk/clerk-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,6 +42,20 @@ const Navbar = () => {
             <NavLink href="#" icon={<Info size={18} />} text="About" />
             <NavLink href="#" icon={<Mail size={18} />} text="Contact" />
             <NavLink href="#" icon={<Settings size={18} />} text="Settings" />
+
+            <SignedIn>
+              <div className="ml-4">
+                <UserButton afterSignOutUrl="/" />
+              </div>
+            </SignedIn>
+
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="ml-4 px-4 py-2 text-sm font-medium bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                  Sign In
+                </button>
+              </SignInButton>
+            </SignedOut>
           </div>
 
           {/* Mobile menu button */}
@@ -68,6 +83,22 @@ const Navbar = () => {
           <MobileNavLink href="#" icon={<Info size={18} />} text="About" />
           <MobileNavLink href="#" icon={<Mail size={18} />} text="Contact" />
           <MobileNavLink href="#" icon={<Settings size={18} />} text="Settings" />
+
+          <SignedOut>
+            <div className="px-3">
+              <SignInButton mode="modal">
+                <button className="w-full px-4 py-2 text-sm font-medium bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                  Sign In
+                </button>
+              </SignInButton>
+            </div>
+          </SignedOut>
+
+          <SignedIn>
+            <div className="px-3">
+              <UserButton afterSignOutUrl="/" />
+            </div>
+          </SignedIn>
         </div>
       </div>
     </nav>
