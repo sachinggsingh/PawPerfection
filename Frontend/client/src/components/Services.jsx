@@ -15,7 +15,7 @@ import {
 
 const Services = () => {
   return (
-    <section className="py-24 bg-gradient-to-b from-white to-primary-50">
+    <section className="py-8 bg-gradient-to-b from-white to-primary-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
@@ -33,7 +33,7 @@ const Services = () => {
         </div>
 
         {/* Main Services Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-4">
           {/* Personalized Training for Pet */}
           <div className="bg-white rounded-2xl p-8 shadow-soft hover:shadow-lg transition-shadow duration-300">
             <div className="flex items-center justify-center w-14 h-14 bg-primary-100 rounded-xl mb-6">

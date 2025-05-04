@@ -3,7 +3,7 @@ import { PawPrint, Heart, Award, Users, Star } from 'lucide-react';
 
 const About = () => {
   return (
-    <section className="bg-white py-24">
+    <section className="bg-white py-6">
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
@@ -18,7 +18,7 @@ const About = () => {
         </div>
 
         {/* Mission Statement */}
-        <div className="relative mb-20">
+        <div className="relative mb-6">
           <div className="relative bg-gradient-to-r from-primary-50 to-secondary-50 rounded-2xl p-8 md:p-12 overflow-hidden">
             <div className="absolute right-0 top-0 -mt-4 -mr-4 w-24 h-24 bg-primary-100 rounded-full opacity-50"></div>
             <div className="relative z-10">
@@ -33,7 +33,7 @@ const About = () => {
         </div>
 
         {/* Key Features */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
           <div className="bg-white rounded-xl p-8 shadow-soft border border-gray-100">
             <div className="flex items-center justify-center w-12 h-12 bg-primary-100 rounded-lg mb-6">
               <PawPrint className="h-6 w-6 text-primary-600" />
