@@ -16,6 +16,7 @@ const trainingModel = new mongoose.Schema(
       },
       resources: {
         type: [String], 
+        default:null,
       },
   },
   {

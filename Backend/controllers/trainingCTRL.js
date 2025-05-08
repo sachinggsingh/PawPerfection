@@ -10,7 +10,7 @@ const trainPet = {
           .status(400)
           .json({ msg: "Cant create Task", success: false });
       //normalize Title
-      const normalizeTitle = title.trim().toLoweCase();
+      const normalizeTitle = title;
       // check is the same exist
       const existingTraining = await Training.findOne({
         title: normalizeTitle,
