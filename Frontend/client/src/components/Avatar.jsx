@@ -22,14 +22,18 @@ const Avatar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await dispatch(logout());
-      navigate('/login');
-    } catch (error) {
-      console.error('Logout failed:', error);
+  const handleLogout = async()=>
+  {
+    try
+    {
+      await dispatch(logout()).unwrap()
+      navigate('/')
     }
-  };
+    catch(error)
+    {
+      console.log(error)
+    }
+  }
 
   if (!user) {
     return (

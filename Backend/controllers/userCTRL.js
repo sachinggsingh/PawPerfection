@@ -66,10 +66,8 @@ const loginUSer = async (req, res) => {
 
 const logoutUSer = async (req, res) => {
   try {
-    return res
-      .status(200)
-      .clearCookie("token", null, { maxAge: 0 })
-      .json({ msg: "Logout successful" });
+    res.clearCookie('token');
+        return res.status(200).json({ msg: "Logged out successfully" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Logout Failed" });
