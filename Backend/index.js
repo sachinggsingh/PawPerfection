@@ -11,6 +11,7 @@ const auth = require('./middleware/auth');
 const userRoutes = require('./routes/userRoutes');
 const petRoutes = require('./routes/petRoute');
 const trainingRoutes = require('./routes/trainingRoutes');
+const feedBackRoutes = require('./routes/feedBack');
 
 // Check if MONGO_URL is defined
 if (!process.env.MONGO_URL) {
@@ -48,7 +49,7 @@ app.get("/",(req,res)=>
 app.use('/api/auth', userRoutes);
 app.use('/api/pet', petRoutes);
 app.use('/api/training', trainingRoutes);
-
+app.use('/api/feedback', feedBackRoutes);
 
 const PORT = process.env.PORT || 5050;
 app.listen(PORT, () => {
