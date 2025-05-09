@@ -1,1 +1,15 @@
 @import "tailwindcss";
+@layer utilities {
+    .custom-spin {
+      animation: custom-spin 3s linear infinite;
+    }
+  
+    @keyframes custom-spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  }

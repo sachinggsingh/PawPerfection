@@ -40,21 +40,8 @@ const Navbar = () => {
             <NavLink href="#" icon={<Home size={18} />} text="Home" />
             <NavLink href="#" icon={<Info size={18} />} text="About" />
             <NavLink href="/contact" icon={<Mail size={18} />} text="Contact" />
-            <NavLink href="#" icon={<Server size={18} />} text="Courses" />
+            <NavLink href="/course" icon={<Server size={18} />} text="Courses" />
             <Avatar />
-
-            {/* <div className="flex space-x-4 ml-4">
-              <a href="/login">
-                <button className="px-4 py-2 text-sm font-medium text-indigo-600 border border-indigo-600 rounded hover:bg-indigo-50 transition-colors duration-200">
-                  Login
-                </button>
-              </a>
-              <a href="/signup">
-                <button className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700 transition-colors duration-200">
-                  Sign Up
-                </button>
-              </a>
-            </div> */}
           </div>
 
           {/* Mobile menu button */}
@@ -81,7 +68,7 @@ const Navbar = () => {
           <MobileNavLink href="#" icon={<Home size={18} />} text="Home" />
           <MobileNavLink href="#" icon={<Info size={18} />} text="About" />
           <MobileNavLink href="/contact" icon={<Mail size={18} />} text="Contact" />
-          <MobileNavLink href="#" icon={<Server size={18} />} text="Courses" />
+          <MobileNavLink href="/course" icon={<Server size={18} />} text="Courses" />
           <div className="mt-4 px-4">
             <Avatar />
           </div>
