@@ -18,6 +18,10 @@ const trainingModel = new mongoose.Schema(
         type: [String], 
         default:null,
       },
+    price : {
+      type: Number,
+      required: true,
+    }
   },
   {
     timestamps: true,

@@ -4,10 +4,11 @@ import storage from 'redux-persist/lib/storage'; // localStorage
 import { combineReducers } from 'redux';
 
 import authSlice from './auth/loginSlice';
-
+import courseSlice from './courses/courseSlice';
 // Combine all your slices
 const rootReducer = combineReducers({
   auth: authSlice,
+  course: courseSlice
 });
 
 // Configuration for redux-persist
