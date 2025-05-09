@@ -1,99 +1,81 @@
-import React, { useEffect } from "react";
-import { Book, Clock, DollarSign } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchCourses } from "../redux/courses/courseSlice";
-import LoadingSpinner from "../components/LoadingSpinner";
 
-const CoursesCard = () => {
-  const dispatch = useDispatch();
-  const { courses, loading, error } = useSelector((state) => state.course);
+import React from 'react';
+import { Book, Calendar, Check, FileText } from 'lucide-react';
 
-  useEffect(() => {
-    dispatch(fetchCourses());
-  }, [dispatch]);
-
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
-  if (error) {
-    return (
-      <div className="container mx-auto px-4 py-8 mt-16">
-        <p className="text-red-500 text-center">{error}</p>
-      </div>
-    );
-  }
-  if (!courses || !Array.isArray(courses)) {
-    return (
-      <div className="container mx-auto px-4 py-8 mt-16">
-        <p className="text-yellow-500 text-center">No courses available</p>
-      </div>
-    );
-  }
-
+const CourseCard = ({ course }) => {
   return (
-    <div className="container mx-auto px-4 py-8 mt-16 mb-12">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {courses.map((course) => (
-          <div
-            key={course._id}
-            className="bg-white/30 backdrop-blur-md rounded-xl drop-shadow-lg hover:shadow-2xl transition-all duration-100 border border-white/20 overflow-hidden"
-          >
-            <div className="p-6 space-y-4">
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-xl font-semibold text-gray-800">
-                    Week {course.week}
-                  </h3>
-                  <span className="inline-block px-3 py-1 text-sm font-medium text-purple-600 bg-purple-100 rounded-full">
-                    ₹{course.price}
-                  </span>
-                </div>
-                <h4 className="text-lg font-medium text-gray-700">
-                  {course.title}
-                </h4>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex flex-col gap-2">
-                  <p className="text-gray-600 font-medium">Tasks:</p>
-                  <ul className="list-disc list-inside space-y-1 text-gray-600 ml-2">
-                    {course.task.map((task, index) => (
-                      <li key={index}>{task}</li>
-                    ))}
-                  </ul>
-                </div>
-
-                {course.resources && course.resources.length > 0 && (
-                  <div className="flex flex-col gap-2">
-                    <p className="text-gray-600 font-medium">Resources:</p>
-                    <ul className="list-disc list-inside space-y-1 text-gray-600 ml-2">
-                      {course.resources.map((resource, index) => (
-                        <li key={index}>{resource}</li>
-                      ))}
-                    </ul>
-                    {/* <ul className="list-disc list-inside space-y-1 text-gray-600 ml-2">
-                          {course.resources.map((resource, index) => (
-                            <li key={index}>
-                              <a href={resource} target="_blank" rel="noopener noreferrer">
-                                {resource}
-                              </a>
-                            </li>
-                          ))}
-                        </ul> */}
-                  </div>
-                )}
-              </div>
-
-              <button className="w-full px-4 py-2 mt-4 text-white bg-purple-600/80 rounded-lg hover:bg-purple-700 transition-colors duration-200 flex items-center justify-center space-x-2 backdrop-blur-sm">
-                <Book className="w-5 h-5" />
-                <span>Enroll Now</span>
-              </button>
-            </div>
-          </div>
-        ))}
+    <div className="bg-gradient-to-br from-white/40 to-white/20 backdrop-blur-md rounded-2xl drop-shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/30 overflow-hidden group">
+      <div className="p-6 space-y-5 relative">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-purple-500/20 transition-all duration-500"></div>
+        <CourseHeader week={course.week} price={course.price} title={course.title} />
+        <CourseContent tasks={course.task} resources={course.resources} />
+        <EnrollButton />
       </div>
     </div>
   );
 };
-export default CoursesCard;
+
+const CourseHeader = ({ week, price, title }) => (
+  <div className="space-y-3">
+    <div className="flex justify-between items-center">
+      <div className="flex items-center space-x-2">
+        <Calendar className="w-5 h-5 text-purple-600" />
+        <h3 className="text-xl font-semibold text-gray-800">Week {week}</h3>
+      </div>
+      <span className="inline-block px-4 py-1.5 text-sm font-medium text-purple-700 bg-purple-100 rounded-full shadow-sm">
+        ₹{price}
+      </span>
+    </div>
+    <h4 className="text-xl font-bold text-gray-800 border-b border-gray-200 pb-3">{title}</h4>
+  </div>
+);
+
+const CourseContent = ({ tasks, resources }) => (
+  <div className="space-y-4">
+    <TasksList tasks={tasks} />
+    {resources && resources.length > 0 && <ResourcesList resources={resources} />}
+  </div>
+);
+
+const TasksList = ({ tasks }) => (
+  <div className="flex flex-col gap-3">
+    <p className="text-gray-700 font-semibold flex items-center gap-2">
+      <Check className="w-4 h-4 text-green-600" />
+      <span>Activities</span>
+    </p>
+    <ul className="space-y-2 text-gray-600 ml-2">
+      {tasks.map((task, index) => (
+        <li key={index} className="flex items-start">
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-purple-500 mt-2 mr-2"></span>
+          <span>{task}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
+const ResourcesList = ({ resources }) => (
+  <div className="flex flex-col gap-3">
+    <p className="text-gray-700 font-semibold flex items-center gap-2">
+      <FileText className="w-4 h-4 text-blue-600" />
+      <span>Resources</span>
+    </p>
+    <ul className="space-y-2 text-gray-600 ml-2">
+      {resources.map((resource, index) => (
+        <li key={index} className="flex items-start">
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 mr-2"></span>
+          <span>{resource}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
+const EnrollButton = () => (
+  <button className="w-full px-4 py-3 mt-2 text-white bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-300 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+    <Book className="w-5 h-5" />
+    <span className="font-medium">Enroll Now</span>
+  </button>
+);
+
+export default CourseCard;
