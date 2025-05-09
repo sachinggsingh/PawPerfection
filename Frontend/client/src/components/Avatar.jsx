@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../redux/auth/loginSlice';
-import { User, LogOut, Settings } from 'lucide-react';
+import { User, LogOut, Settings, PawPrint } from 'lucide-react';
 
 const Avatar = () => {
   const { user } = useSelector(state => state.auth);
@@ -91,8 +91,16 @@ const Avatar = () => {
     </button>
 
     <button
+      onClick={() => navigate('/pet')}
+      className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 transition-colors"
+    >
+      <PawPrint className="w-4 h-4 mr-2 text-gray-500" />
+      Pet Register
+    </button>
+
+    <button
       onClick={handleLogout}
-      className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors"
+      className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-300 transition-colors"
     >
       <LogOut className="w-4 h-4 mr-2 text-red-500" />
       Logout

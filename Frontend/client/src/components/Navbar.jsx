@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Home, Info, Settings, Mail, PawPrint } from 'lucide-react';
+import { Menu, X, Home, Info, Server, Mail, PawPrint } from 'lucide-react';
 import Avatar from './Avatar';
 
 const Navbar = () => {
@@ -22,7 +22,7 @@ const Navbar = () => {
   return (
     <nav 
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm' : 'bg-transparent'
+        isScrolled ? 'bg-white/150 backdrop-blur-md shadow-sm' : 'bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,8 +39,8 @@ const Navbar = () => {
           <div className="hidden md:flex md:items-center md:space-x-8">
             <NavLink href="#" icon={<Home size={18} />} text="Home" />
             <NavLink href="#" icon={<Info size={18} />} text="About" />
-            <NavLink href="#" icon={<Mail size={18} />} text="Contact" />
-            <NavLink href="#" icon={<Settings size={18} />} text="Settings" />
+            <NavLink href="/contact" icon={<Mail size={18} />} text="Contact" />
+            <NavLink href="#" icon={<Server size={18} />} text="Courses" />
             <Avatar />
 
             {/* <div className="flex space-x-4 ml-4">
@@ -80,8 +80,8 @@ const Navbar = () => {
         <div className="px-2 pt-2 pb-3 space-y-1 bg-white/95 backdrop-blur-md shadow-lg">
           <MobileNavLink href="#" icon={<Home size={18} />} text="Home" />
           <MobileNavLink href="#" icon={<Info size={18} />} text="About" />
-          <MobileNavLink href="#" icon={<Mail size={18} />} text="Contact" />
-          <MobileNavLink href="#" icon={<Settings size={18} />} text="Settings" />
+          <MobileNavLink href="/contact" icon={<Mail size={18} />} text="Contact" />
+          <MobileNavLink href="#" icon={<Server size={18} />} text="Courses" />
           <div className="mt-4 px-4">
             <Avatar />
           </div>
