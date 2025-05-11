@@ -10,6 +10,7 @@ const Contact = lazy(()=>import ('./components/Contact'))
 const  SignUp = lazy(()=> import('./components/Signup'))
 const Login = lazy(()=> import('./components/Login'))
 const Page = lazy(()=> import('./pages/Home'))
+const Video = lazy(()=>import('./pages/Video'))
 
 const App = () => {
   return (
@@ -46,6 +47,14 @@ const App = () => {
           element={
             <Suspense fallback={<LoadingSpinner />}>
               <Courses />
+            </Suspense>
+          }
+        />
+      <Route 
+          path="/video" 
+          element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <Video />
             </Suspense>
           }
         />
