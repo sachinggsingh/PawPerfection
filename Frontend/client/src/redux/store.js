@@ -5,10 +5,12 @@ import { combineReducers } from 'redux';
 
 import authSlice from './auth/loginSlice';
 import courseSlice from './courses/courseSlice';
+import videoSlice from './courses/videoSlice';
 // Combine all your slices
 const rootReducer = combineReducers({
   auth: authSlice,
-  course: courseSlice
+  course: courseSlice,
+  video: videoSlice
 });
 
 // Configuration for redux-persist

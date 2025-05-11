@@ -2,9 +2,9 @@ const Video = require("../models/videos");
 
 const createVideo = async (req, res) => {
   try {
-    const { title, description, url, resources } = req.body;
+    const { title, description, url, resources ,price} = req.body;
 
-    if (!title || !description || !url || !resources) {
+    if (!title || !description || !url || !resources|| !price) {
       return res
         .status(400)
         .json({ msg: "Please enter all fields", success: false });
@@ -66,6 +66,7 @@ const createVideo = async (req, res) => {
       description,
       url: [encryptedUrl],
       resources,
+      price
     });
 
     return res.status(201).json({
@@ -76,6 +77,7 @@ const createVideo = async (req, res) => {
         description: video.description,
         url: video.url,
         resources: video.resources,
+        price: video.price
       },
       success: true,
     });
@@ -105,6 +107,22 @@ const showVideo = async(req,res)=>
     }
 }
 
+
+const showAllVideos = async(req,res)=>
+{
+  try
+  {
+      const videos = await Video.find()
+      if(!videos)
+          return res.status(400).json({msg:"Videos not found",success:false})
+      return res.status(200).json({msg:"Videos found successfully",videos,success:true})
+  }
+  catch(error)
+  {
+    console.log(error)
+    return res.status(500).json({msg:"Failed to fetch videos",success:false})
+  }
+}
 
 const deleteVideo = async(req,res)=>
 {
@@ -148,5 +166,6 @@ module.exports = {
     createVideo,
     showVideo,
     deleteVideo,
-    updateVideo
+    updateVideo,
+    showAllVideos
 }

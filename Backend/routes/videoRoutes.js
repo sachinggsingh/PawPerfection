@@ -6,6 +6,7 @@ const videoCTRL = require('../controllers/videoCTRL');
 router.post('/create',videoCTRL.createVideo);
 // router.get('/video',videoCTRL.getAllVideos);
 router.get('/show/:id',videoCTRL.showVideo);
+router.get('/show',videoCTRL.showAllVideos);
 router.put('/update/:id',videoCTRL.updateVideo);
 router.delete('/delete/:id',videoCTRL.deleteVideo);
 
