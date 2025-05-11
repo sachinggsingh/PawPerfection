@@ -16,6 +16,7 @@ const videoSchema = new mongoose.Schema({
     resources : {
         type: [String],
         required: true,
+        default: null
     }
 }, { timestamps: true });        
 
