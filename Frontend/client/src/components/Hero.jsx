@@ -1,7 +1,17 @@
 import React from 'react';
 import { Play, PawPrint, Shield, Clock } from 'lucide-react';
+import {useNavigate} from 'react-router-dom'
 
 const Hero = () => {
+  const navigate = useNavigate()
+
+  const handleStartTraining = () => {
+    navigate('/courses');
+  };
+
+  const handleConsultation = () => {
+    navigate('/contact');
+  }
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-primary-50 to-white pt-16 pb-32">
       {/* Decorative elements */}
@@ -30,11 +40,11 @@ const Hero = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <button className="inline-flex items-center px-6 py-3 rounded-lg bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors duration-200">
+              <button onClick={handleStartTraining} className="inline-flex items-center px-6 py-3 rounded-lg bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors duration-200">
                 <Play className="h-5 w-5 mr-2" />
                 Start Training Now
               </button>
-              <button className="inline-flex items-center px-6 py-3 rounded-lg border-2 border-gray-200 text-gray-700 font-semibold hover:border-primary-600 hover:text-primary-600 transition-colors duration-200">
+              <button onClick={handleConsultation} className="inline-flex items-center px-6 py-3 rounded-lg border-2 border-gray-200 text-gray-700 font-semibold hover:border-primary-600 hover:text-primary-600 transition-colors duration-200">
                 Free Consultation
               </button>
             </div>

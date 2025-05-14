@@ -7,7 +7,7 @@ const CourseCard = ({ course }) => {
   return (
     <div className="relative bg-gradient-to-br from-white/40 to-white/20 backdrop-blur-md rounded-2xl drop-shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/30 overflow-hidden group">
       <div className="p-6 space-y-5 relative">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-purple-500/20 transition-all duration-500"></div>
+        <div className="absolute top-0 right-0 w-32 h-32  rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-purple-500/50 transition-all duration-500"></div>
         <CourseHeader
           week={course.week}
           price={course.price}

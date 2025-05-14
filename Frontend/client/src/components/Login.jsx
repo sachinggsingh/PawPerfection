@@ -14,6 +14,8 @@ const Login = () => {
 		email : '',
 		password : ''
 	})
+
+  const [loginError, setLoginError] = useState('');
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData(prev => ({
@@ -24,6 +26,7 @@ const Login = () => {
 	 const handleForm = async(e)=>
    {
     e.preventDefault()
+    setLoginError('')
     try{
       const response = await dispatch(login(formData)).unwrap()
       if(response.token){
@@ -32,6 +35,7 @@ const Login = () => {
     }
     catch(err){
       console.log(err)
+      setLoginError(err.message||'Login failed')
     }
    }
   if(loading)
@@ -39,6 +43,14 @@ const Login = () => {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <Loader className="animate-spin" size={24} />
+      </div>
+    );
+  }
+  if(loginError)
+  {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <p className="text-red-500">{loginError}</p>
       </div>
     );
   }
@@ -106,7 +118,7 @@ const Login = () => {
 			  name="email"
               placeholder="xyz@gmail.com"
               className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-violet-600"
-			  value={formData.value}
+			  value={formData.email}
 			  onChange={handleChange}
 			  required
             />
@@ -127,11 +139,14 @@ const Login = () => {
               id="password"
               placeholder="••••••••"
               className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-violet-600"
-			  value={formData.value}
+			  value={formData.password}
 			  onChange={handleChange}
 			  required
             />
           </div>
+          {loginError && (
+            <p className="text-red-500">{loginError}</p>
+          )}
 
           <button
             type="submit" 

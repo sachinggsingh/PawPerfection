@@ -17,7 +17,7 @@ const createUser = async (req, res) => {
           "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.",
       });
     }
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.find({ email });
     if (existingUser) {
       return res.status(400).json({ msg: "User already exists" });
     }
@@ -41,17 +41,17 @@ const loginUSer = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ msg: "All fields are required" });
     }
-    const user = await User.findOne({ email });
+    const user = await User.find({ email });
     if (!user) {
       return res.status(400).json({ msg: "User not found" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ msg: "Invalid credentials" });
+      return res.status(400).json({ msg: "Your credentials do not match" });
     }
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    // console.log(token)
+    console.log(token)
     return res.status(200).json({ msg: "Login successful", token,
       user: {
         id: user._id,

@@ -37,8 +37,8 @@ const Navbar = () => {
 
           {/* Desktop navigation */}
           <div className="hidden md:flex md:items-center md:space-x-8">
-            <NavLink href="#" icon={<Home size={18} />} text="Home" />
-            <NavLink href="#" icon={<Info size={18} />} text="About" />
+            <NavLink href='/' icon={<Home size={18} />} text="Home" />
+            <NavLink href="/about" icon={<Info size={18} />} text="About" />
             <NavLink href="/contact" icon={<Mail size={18} />} text="Contact" />
             <NavLink href="/course" icon={<FileType size={18} />} text="Courses" />
             <NavLink href="/video" icon={<Video  size={18} />} text="Videos" />
@@ -66,17 +66,17 @@ const Navbar = () => {
       {/* Mobile menu */}
       <div className={`md:hidden transition-all duration-300 ease-in-out transform ${isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
         <div className="px-2 pt-2 pb-3 space-y-1 bg-white/95 backdrop-blur-md shadow-lg">
-          <MobileNavLink href="#" icon={<Home size={18} />} text="Home" />
-          <MobileNavLink href="#" icon={<Info size={18} />} text="About" />
+          <MobileNavLink href="/" icon={<Home size={18} />} text="Home" />
+          <MobileNavLink href="/about" icon={<Info size={18} />} text="About" />
           <MobileNavLink href="/contact" icon={<Mail size={18} />} text="Contact" />
           <MobileNavLink href="/course" icon={<FileType size={18} />} text="Courses" />
-           <NavLink href="/video" icon={<Video size={18} />} text="Videos" />
+          <MobileNavLink href="/video" icon={<Video size={18} />} text="Videos" />
           <div className="mt-4 px-4">
             <Avatar />
           </div>
 
           <div className="px-3 space-y-2 mt-2">
-            <a href="/login" className="block">
+            {/* <a href="/login" className="block">
               <button className="w-full px-4 py-2 text-sm font-medium text-indigo-600 border hover:bg-white transition-colors duration-200">
                 Login
               </button>
@@ -85,7 +85,7 @@ const Navbar = () => {
               <button className="w-full px-4 py-2 text-sm font-medium text-white  hover:bg-indigo-600 transition-colors duration-200">
                 Sign Up
               </button>
-            </a>
+            </a> */}
           </div>
         </div>
       </div>
