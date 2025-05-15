@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
-
+import { login } from '../redux/auth/loginSlice';
+import { useDispatch,useSelector } from 'react-redux';
+import LoadingSpinner from './LoadingSpinner';
+import { useNavigate } from 'react-router-dom';
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isLoading } = useSelector(state => state.auth);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -26,11 +32,26 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      console.log('Login submitted', { email, password, rememberMe });
+    if (!validateForm()) return;
+    try
+    {
+      const result = await dispatch(login({ email, password, rememberMe })).unwrap();
+      console.log('Form submitted:', result);
+      {
+        isLoading && (
+          <div className="flex justify-center mb-4">
+            <LoadingSpinner />
+          </div>
+        )
+      }
+      navigate('/'); // Redirect to the dashboard after successful login
     }
+    catch(error)
+    {
+      console.log(error)
+    } 
   };
 
   return (

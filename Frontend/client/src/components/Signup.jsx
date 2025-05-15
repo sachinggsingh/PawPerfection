@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { register } from '../redux/auth/loginSlice';
-import {useDispatch, useSelector} from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import LoadingSpinner from './LoadingSpinner';
 import { useNavigate } from 'react-router-dom';
 
@@ -26,8 +26,6 @@ const Signup = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!form.name.trim()) newErrors.name = 'Name is required';
-
     if (!form.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(form.email)) {
@@ -40,28 +38,27 @@ const Signup = () => {
       newErrors.password = 'Password must be at least 6 characters';
     }
 
-    if (!form.confirmPassword) {
-      newErrors.confirmPassword = 'Confirm your password';
-    } else if (form.password !== form.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault(); 
-    try
-    {
-      if (validateForm()) {
-        dispatch(register(form));
-        isLoading && <LoadingSpinner/>
-        navigate('/login');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+    try {
+      const result = await dispatch(register(form)).unwrap();
+      console.log('Form submitted:', result);
+      {
+        isLoading && (
+          <div className="flex justify-center mb-4">
+            <LoadingSpinner />
+          </div>
+        )
       }
+      navigate('/login');
+
     }
-    catch(error)
-    {
+    catch (error) {
       console.log(error)
     }
   };
@@ -91,9 +88,8 @@ const Signup = () => {
               placeholder="your.email@example.com"
               autoComplete="email"
               required
-              className={`mt-1 block w-full px-4 py-2 border ${
-                errors.email ? 'border-red-500' : 'border-gray-300'
-              } rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500`}
+              className={`mt-1 block w-full px-4 py-2 border ${errors.email ? 'border-red-500' : 'border-gray-300'
+                } rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500`}
             />
             {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
           </div>
@@ -111,9 +107,8 @@ const Signup = () => {
               placeholder="••••••••"
               autoComplete="new-password"
               required
-              className={`mt-1 block w-full px-4 py-2 border ${
-                errors.password ? 'border-red-500' : 'border-gray-300'
-              } rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500`}
+              className={`mt-1 block w-full px-4 py-2 border ${errors.password ? 'border-red-500' : 'border-gray-300'
+                } rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500`}
             />
             <button
               type="button"
@@ -129,7 +124,7 @@ const Signup = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full p-2 border-current  px-4 bg-primary-600 hover:bg-primary-700 text-black font-semibold rounded-md shadow transition"
+            className="w-full cursor-pointer p-2 border-outline px-4 bg-gray-200 hover:bg-gray-400 text-black font-semibold rounded-md shadow transition"
           >
             Sign Up
           </button>
@@ -138,7 +133,7 @@ const Signup = () => {
           <p className="text-center text-sm text-gray-600 mt-4">
             Already have an account?{' '}
             <Link to="/login" className="font-medium text-primary-600 hover:text-primary-500 transition-colors">
-              Sign in here
+              Already have an account
             </Link>
           </p>
         </form>

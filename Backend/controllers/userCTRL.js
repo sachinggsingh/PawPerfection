@@ -14,21 +14,29 @@ const createUser = async (req, res) => {
     if (!passwordRegex.test(password)) {
       return res.status(400).json({
         message:
-          "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.",
+          "Password must be at least 6 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.",
       });
     }
-    const existingUser = await User.find({ email });
+
+    const existingUser = await User.findOne({ email }); // fix this
     if (existingUser) {
       return res.status(400).json({ msg: "User already exists" });
     }
+
     const hashedPassword = await bcrypt.hash(password, 10);
+    // const newUser = await User.create({ email, password: hashedPassword });
     const newUser = await User.create({ email, password: hashedPassword });
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET,{
-        expiresIn: "1d",
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
     });
-    return res
-      .status(200)
-      .json({ msg: "User created successfully", token, user: newUser });
+    return res.status(200).json({
+      msg: "User created successfully",
+      token,
+      user: {
+        id: newUser._id,
+        email: newUser.email,
+      },
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "User creation failed" });
@@ -41,7 +49,7 @@ const loginUSer = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ msg: "All fields are required" });
     }
-    const user = await User.find({ email });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ msg: "User not found" });
     }
@@ -50,14 +58,17 @@ const loginUSer = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ msg: "Your credentials do not match" });
     }
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    console.log(token)
-    return res.status(200).json({ msg: "Login successful", token,
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
+    return res.status(200).json({
+      msg: "Login successful",
+      token,
       user: {
         id: user._id,
         email: user.email,
       },
-     });
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Login Failed" });
@@ -66,8 +77,13 @@ const loginUSer = async (req, res) => {
 
 const logoutUSer = async (req, res) => {
   try {
-    res.clearCookie('token');
-        return res.status(200).json({ msg: "Logged out successfully" });
+    res.clearCookie("token", {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    return res.status(200).json({ msg: "Logout successful" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Logout Failed" });
