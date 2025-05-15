@@ -1,161 +1,150 @@
-import React from 'react';
-import {Link , useNavigate} from 'react-router-dom'
-import {useState} from 'react'
-import {useDispatch} from 'react-redux'
-import {register} from '../redux/auth/loginSlice'
-import { useSelector } from 'react-redux';
-import {Loader} from  'lucide-react'
-const SignUp = () => {
-  const {loading,error} = useSelector((state) => state.auth)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const [formData,setFormData] = useState({
-    email:'',
-    password : '',
-    confirmPassword : ''
-  })
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
+import { register } from '../redux/auth/loginSlice';
+import {useDispatch, useSelector} from 'react-redux'
+import LoadingSpinner from './LoadingSpinner';
+import { useNavigate } from 'react-router-dom';
 
-  const handleChange =(e)=>
-  {
-    const {name,value} =e.target;
-    setFormData(prev=>({
-      ...prev,
-      [name]:value
-    }))
-  }
-  const handleSignUp = async (e)=>
-  {
-    e.preventDefault();
-    if(formData.password !== formData.confirmPassword){
-      alert("Passwords do not match")
-      return
+const Signup = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isLoading } = useSelector(state => state.auth);
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (field) => (e) => {
+    setForm({ ...form, [field]: e.target.value });
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!form.name.trim()) newErrors.name = 'Name is required';
+
+    if (!form.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(form.email)) {
+      newErrors.email = 'Please enter a valid email address';
     }
-    try{
-      const response = await dispatch(register(formData)).unwrap()
-      if(response.token){
-        navigate('/')
+
+    if (!form.password) {
+      newErrors.password = 'Password is required';
+    } else if (form.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+
+    if (!form.confirmPassword) {
+      newErrors.confirmPassword = 'Confirm your password';
+    } else if (form.password !== form.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault(); 
+    try
+    {
+      if (validateForm()) {
+        dispatch(register(form));
+        isLoading && <LoadingSpinner/>
+        navigate('/login');
       }
     }
-    catch(err){
-      console.log(err)
+    catch(error)
+    {
+      console.log(error)
     }
-  }
-  if(loading)
-  {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <Loader className="animate-spin" size={24} />
-      </div>
-    );
-  }
-  if(error){
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <p className="text-red-500">{error}</p>
-      </div>
-    );
-  }
-  if(!loading && !error && formData.token){
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <p className="text-green-500">Successfully signed up</p>
-      </div>
-    );
-  }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md p-6 rounded-md shadow-md bg-white dark:bg-gray-50 dark:text-gray-800">
-        <h2 className="mb-3 text-3xl font-semibold text-center">Create your account</h2>
-        <p className="text-sm text-center text-gray-600 dark:text-gray-600">
-          Already have an Account?
-          <Link to='/login' className="ml-1 text-violet-600 hover:underline">
-            Login
-          </Link>
+    <div className="min-h-screen flex flex-col justify-center items-center px-4 py-10 bg-gray-50">
+      <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-xl animate-slideUp">
+        <h2 className="text-2xl font-bold text-center text-gray-800">
+          Create your account
+        </h2>
+        <p className="text-sm text-center text-gray-600 mt-1">
+          Sign up to track your pet’s progress and start training today
         </p>
 
-        <div className="my-6 space-y-4">
-          {/* Google Login */}
-          <button
-            type="button"
-            className="flex items-center justify-center w-full p-3 border rounded-md hover:bg-gray-300 focus:ring-2 focus:ring-offset-1 focus:ring-gray-600"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-5 h-5 mr-2 fill-current">
-              <path d="M16.318 13.714v5.484h9.078c-0.37 2.354-2.745 6.901-9.078 6.901-5.458 0-9.917-4.521-9.917-10.099s4.458-10.099 9.917-10.099c3.109 0 5.193 1.318 6.38 2.464l4.339-4.182c-2.786-2.599-6.396-4.182-10.719-4.182-8.844 0-16 7.151-16 16s7.156 16 16 16c9.234 0 15.365-6.49 15.365-15.635 0-1.052-0.115-1.854-0.255-2.651z" />
-            </svg>
-            Login with Google
-          </button>
-        </div>
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
 
-        <div className="flex items-center w-full my-4">
-          <hr className="w-full text-gray-400" />
-          <p className="px-3 text-gray-500">OR</p>
-          <hr className="w-full text-gray-400" />
-        </div>
-
-        <form className="space-y-6" onSubmit={handleSignUp}>
-          <div className="space-y-2">
-            <label htmlFor="email" className="block text-sm font-medium">
-              Email address
+          {/* Email */}
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Email Address
             </label>
             <input
-              type="email"
               id="email"
-              placeholder="xyz@gmail.com"
-              className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-violet-600"
-              name="email"
-              value={formData.value}
-              onChange={handleChange}
+              type="email"
+              value={form.email}
+              onChange={handleChange('email')}
+              placeholder="your.email@example.com"
+              autoComplete="email"
               required
+              className={`mt-1 block w-full px-4 py-2 border ${
+                errors.email ? 'border-red-500' : 'border-gray-300'
+              } rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500`}
             />
+            {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
           </div>
 
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <label htmlFor="password" className="text-sm font-medium">
-                Password
-              </label>
-            </div>
+          {/* Password */}
+          <div className="relative">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
             <input
-              type="password"
               id="password"
+              type={showPassword ? 'text' : 'password'}
+              value={form.password}
+              onChange={handleChange('password')}
               placeholder="••••••••"
-              className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-violet-600"
-              name="password"
-              value={formData.value}
-              onChange={handleChange}
-              minLength={6}
+              autoComplete="new-password"
               required
+              className={`mt-1 block w-full px-4 py-2 border ${
+                errors.password ? 'border-red-500' : 'border-gray-300'
+              } rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500`}
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-9 text-gray-500 hover:text-primary-600 transition-colors"
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+            {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password}</p>}
           </div>
 
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <label htmlFor="Confirm password" className="text-sm font-medium">
-                Confirm Password
-              </label>
-            </div>
-            <input
-              type="password"
-              id="password"
-              placeholder="••••••••"
-              className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-violet-600"
-              name="confirmPassword"
-              value={formData.value}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full px-6 py-3 font-semibold rounded-md bg-gray-600 text-white hover:bg-gray-900"
+            className="w-full p-2 border-current  px-4 bg-primary-600 hover:bg-primary-700 text-black font-semibold rounded-md shadow transition"
           >
-            Sign in
+            Sign Up
           </button>
+
+          {/* Login Redirect */}
+          <p className="text-center text-sm text-gray-600 mt-4">
+            Already have an account?{' '}
+            <Link to="/login" className="font-medium text-primary-600 hover:text-primary-500 transition-colors">
+              Sign in here
+            </Link>
+          </p>
         </form>
       </div>
     </div>
   );
 };
 
-export default SignUp;
+export default Signup;

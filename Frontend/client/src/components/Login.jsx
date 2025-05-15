@@ -1,159 +1,136 @@
-import React from 'react';
-import {Link} from 'react-router-dom'
-import {useState} from 'react'
-import { useNavigate } from 'react-router-dom';
-import { useSelector,useDispatch } from 'react-redux';
-import { login } from '../redux/auth/loginSlice';
-import {Loader} from  'lucide-react'
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const {user,loading,error} = useSelector((state) => state.auth)
-	const [formData , setFormData] = useState({
-		email : '',
-		password : ''
-	})
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [errors, setErrors] = useState({});
 
-  const [loginError, setLoginError] = useState('');
-	const handleChange = (e) => {
-		const { name, value } = e.target;
-		setFormData(prev => ({
-		  ...prev,
-		  [name]: value
-		}));
-	  };
-	 const handleForm = async(e)=>
-   {
-    e.preventDefault()
-    setLoginError('')
-    try{
-      const response = await dispatch(login(formData)).unwrap()
-      if(response.token){
-        navigate('/')
-      }
-    }
-    catch(err){
-      console.log(err)
-      setLoginError(err.message||'Login failed')
-    }
-   }
-  if(loading)
-  {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <Loader className="animate-spin" size={24} />
-      </div>
-    );
-  }
-  if(loginError)
-  {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <p className="text-red-500">{loginError}</p>
-      </div>
-    );
-  }
-  if(error){
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <p className="text-red-500">{error}</p>
-      </div>
-    );
-  }
-  if(user && user.token){
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <p className="text-green-500">Login successful</p>
-      </div>
-    );
-  }
-  if(!user && !loading && !error && formData.token){
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <p className="text-red-500">Login failed</p>
-      </div>
-    );
-  }
+  const validateForm = () => {
+    const newErrors = {};
 
+    if (!email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+
+    if (!password) {
+      newErrors.password = 'Password is required';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      console.log('Login submitted', { email, password, rememberMe });
+    }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md p-6 rounded-md shadow-md bg-white dark:bg-gray-50 dark:text-gray-800">
-        <h2 className="mb-3 text-3xl font-semibold text-center">Login to your account</h2>
-        <p className="text-sm text-center text-gray-600 dark:text-gray-600">
-          Don’t have an account?
-          <Link to='/signup' className="ml-1 text-violet-600 hover:underline">
-            Sign up here
-          </Link>
+    <div className="min-h-screen flex flex-col justify-center items-center px-4 py-10 bg-gray-50">
+      <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-xl animate-slideUp">
+        <h2 className="text-2xl font-bold text-center text-gray-800">
+          Welcome Back!
+        </h2>
+        <p className="text-sm text-center text-gray-600 mt-1">
+          Log in to access your training programs and pet progress
         </p>
 
-        <div className="my-6 space-y-4">
-          {/* Google Login */}
-          <button
-            type="button"
-            className="flex items-center justify-center w-full p-3 border rounded-md hover:bg-gray-300 focus:ring-2 focus:ring-offset-1 focus:ring-gray-600"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-5 h-5 mr-2 fill-current">
-              <path d="M16.318 13.714v5.484h9.078c-0.37 2.354-2.745 6.901-9.078 6.901-5.458 0-9.917-4.521-9.917-10.099s4.458-10.099 9.917-10.099c3.109 0 5.193 1.318 6.38 2.464l4.339-4.182c-2.786-2.599-6.396-4.182-10.719-4.182-8.844 0-16 7.151-16 16s7.156 16 16 16c9.234 0 15.365-6.49 15.365-15.635 0-1.052-0.115-1.854-0.255-2.651z" />
-            </svg>
-            Login with Google
-          </button>
-        </div>
-
-        <div className="flex items-center w-full my-4">
-          <hr className="w-full text-gray-400" />
-          <p className="px-3 text-gray-500">OR</p>
-          <hr className="w-full text-gray-400" />
-        </div>
-
-        <form className="space-y-6" onSubmit={handleForm}>
-          <div className="space-y-2">
-            <label htmlFor="email" className="block text-sm font-medium">
-              Email address
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+          {/* Email Field */}
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Email Address
             </label>
             <input
-              type="email"
               id="email"
-			  name="email"
-              placeholder="xyz@gmail.com"
-              className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-violet-600"
-			  value={formData.email}
-			  onChange={handleChange}
-			  required
+              name="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your.email@example.com"
+              autoComplete="email"
+              required
+              className={`mt-1 block w-full px-4 py-2 border ${
+                errors.email ? 'border-red-500' : 'border-gray-300'
+              } rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500`}
             />
+            {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
           </div>
 
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <label htmlFor="password" className="text-sm font-medium">
-                Password
+          {/* Password Field */}
+          <div className="relative">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              autoComplete="current-password"
+              required
+              className={`mt-1 block w-full px-4 py-2 border ${
+                errors.password ? 'border-red-500' : 'border-gray-300'
+              } rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500`}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-9 text-gray-500 hover:text-primary-600 transition-colors"
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+            {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password}</p>}
+          </div>
+
+          {/* Remember Me & Forgot Password */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input
+                id="remember-me"
+                name="remember-me"
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="h-4 w-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+              />
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 cursor-pointer">
+                Remember me
               </label>
-              <a href="#" className="text-xs text-violet-600 hover:underline">
-                Forgot password?
+            </div>
+            <div className="text-sm">
+              <a href="#" className="text-primary-600 hover:text-primary-500 font-medium transition-colors">
+                Forgot your password?
               </a>
             </div>
-            <input
-              type="password"
-			  name="password"
-              id="password"
-              placeholder="••••••••"
-              className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-violet-600"
-			  value={formData.password}
-			  onChange={handleChange}
-			  required
-            />
           </div>
-          {loginError && (
-            <p className="text-red-500">{loginError}</p>
-          )}
 
+          {/* Submit Button */}
           <button
-            type="submit" 
-            className="w-full px-6 py-3 font-semibold rounded-md bg-gray-600 text-white hover:bg-gray-900"
+            type="submit"
+            className="w-full py-2 px-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-md shadow transition"
           >
-            Sign in
+            Sign In
           </button>
+
+          {/* Sign Up Redirect */}
+          <p className="text-center text-sm text-gray-600 mt-4">
+            Don't have an account?{' '}
+            <Link to="/signup" className="font-medium text-primary-600 hover:text-primary-500 transition-colors">
+              Create one now
+            </Link>
+          </p>
         </form>
       </div>
     </div>
