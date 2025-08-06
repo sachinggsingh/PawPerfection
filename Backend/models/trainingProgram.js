@@ -1,26 +1,35 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose'
 
-const trainingModel = new mongoose.Schema(
+const trainingSchema = new mongoose.Schema(
   {
     week: {
       type: Number,
       required: true,
+      min: 1
     },
     title: {
       type: String,
       required: true,
+      trim: true
     },
     task: {
         type: [String],
         required: true,
-      },
-      resources: {
+        validate: {
+          validator: function(v) {
+            return v.length > 0;
+          },
+          message: 'At least one task is required'
+        }
+    },
+    resources: {
         type: [String], 
-        default:null,
-      },
-    price : {
+        default: []
+    },
+    price: {
       type: Number,
       required: true,
+      min: 0
     }
   },
   {
@@ -28,4 +37,4 @@ const trainingModel = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Training", trainingModel);
+export default mongoose.model("Training", trainingSchema);

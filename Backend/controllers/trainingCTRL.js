@@ -1,4 +1,4 @@
-const Training = require("../models/trainingProgram");
+import Training, { findOne, findByIdAndUpdate, findByIdAndDelete, find, findById } from "../models/trainingProgram";
 
 const trainPet = {
   createTrainingProgram: async (req, res) => {
@@ -16,7 +16,7 @@ const trainPet = {
           .status(400)
           .json({ msg: "Price can't be negative", success: false });
 
-      const existingTraining = await Training.findOne({
+      const existingTraining = await findOne({
         title: normalizeTitle,
         task,
         resources,
@@ -59,7 +59,7 @@ const trainPet = {
       }
 
       // Update the training program with the provided fields
-      const updatedTrainingModel = await Training.findByIdAndUpdate(
+      const updatedTrainingModel = await findByIdAndUpdate(
         trainingId,
         { task, title, week, resources, price },
         { new: true }
@@ -88,7 +88,7 @@ const trainPet = {
   deleteTraining: async (req, res) => {
     try {
       const { trainingId } = req.params;
-      const deleteTrainingModel = await Training.findByIdAndDelete({
+      const deleteTrainingModel = await findByIdAndDelete({
         trainingId,
       });
       if (!deleteTrainingModel)
@@ -105,7 +105,7 @@ const trainPet = {
   },
   getAllTrainingPrograms: async (req, res) => {
     try {
-      const trainingPrograms = await Training.find(); 
+      const trainingPrograms = await find(); 
       if (trainingPrograms.length === 0) {
         return res
           .status(404)
@@ -128,7 +128,7 @@ const trainPet = {
   getTrainingProgramById: async (req, res) => {
     try {
       const { trainingId } = req.params;
-      const trainingModel = await Training.findById({ trainingId });
+      const trainingModel = await findById({ trainingId });
 
       if (!trainingModel)
         return res
@@ -146,4 +146,4 @@ const trainPet = {
   },
 };
 
-module.exports = trainPet;
+export default trainPet;

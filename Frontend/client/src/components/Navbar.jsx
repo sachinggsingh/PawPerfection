@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Home, Info, FileType, Mail, PawPrint,Video } from 'lucide-react';
+import { Menu, X, Home, Info, FileType, Mail, PawPrint } from 'lucide-react';
 import Avatar from './Avatar';
 
 const Navbar = () => {
@@ -41,7 +41,6 @@ const Navbar = () => {
             <NavLink href="/about" icon={<Info size={18} />} text="About" />
             <NavLink href="/contact" icon={<Mail size={18} />} text="Contact" />
             <NavLink href="/course" icon={<FileType size={18} />} text="Courses" />
-            <NavLink href="/video" icon={<Video  size={18} />} text="Videos" />
             <Avatar />
           </div>
 
@@ -70,7 +69,6 @@ const Navbar = () => {
           <MobileNavLink href="/about" icon={<Info size={18} />} text="About" />
           <MobileNavLink href="/contact" icon={<Mail size={18} />} text="Contact" />
           <MobileNavLink href="/course" icon={<FileType size={18} />} text="Courses" />
-          <MobileNavLink href="/video" icon={<Video size={18} />} text="Videos" />
           <div className="mt-4 px-4">
             <Avatar />
           </div>

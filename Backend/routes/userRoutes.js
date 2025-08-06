@@ -1,10 +1,15 @@
-const express = require('express');
-const router = express.Router();
-const userCTRL = require('../controllers/userCTRL');
+import { Router } from 'express';
+const router = Router();
+import { createUser, loginUSer, logoutUSer, refreshToken, getProfile } from '../controllers/userCTRL';
+import auth from '../middleware/auth.js';
 
-router.post('/register',userCTRL.createUser);
-router.post('/login',userCTRL.loginUSer);
-router.get('/logout',userCTRL.logoutUSer);
+// Public routes
+router.post('/register', createUser);
+router.post('/login', loginUSer);
+router.post('/logout', logoutUSer);
+router.post('/refresh-token', refreshToken);
 
+// Protected routes
+router.get('/profile', auth, getProfile);
 
-module.exports = router
+export default router

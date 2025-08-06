@@ -1,23 +1,63 @@
-const jwt = require('jsonwebtoken');
+import { verify } from 'jsonwebtoken';
+import User from '../models/user.js';
 
 const auth = async (req, res, next) => {
     try {
-        const token = req.header('Authorization')?.replace('Bearer ', '');
-        
+        // Get token from header
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(401).json({ 
+                msg: 'Access denied. No token provided.',
+                error: 'NO_TOKEN'
+            });
+        }
+
+        const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+
         if (!token) {
-            return res.status(401).json({ msg: 'No authentication token, access denied' });
+            return res.status(401).json({ 
+                msg: 'Access denied. No token provided.',
+                error: 'NO_TOKEN'
+            });
         }
 
-        const verified = jwt.verify(token, process.env.JWT_SECRET);
-        if (!verified) {
-            return res.status(401).json({ msg: 'Token verification failed, authorization denied' });
+        // Verify access token
+        const decoded = verify(token, process.env.JWT_SECRET);
+        
+        // Check if user still exists
+        const user = await User.findById(decoded.id);
+        if (!user) {
+            return res.status(401).json({ 
+                msg: 'Token is not valid. User not found.',
+                error: 'USER_NOT_FOUND'
+            });
         }
 
-        req.user = verified;
+        // Add user to request object
+        req.user = user;
         next();
     } catch (error) {
-        res.status(401).json({ msg: 'Invalid token, authorization denied' });
+        console.error('Auth middleware error:', error);
+        
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ 
+                msg: 'Token has expired.',
+                error: 'TOKEN_EXPIRED'
+            });
+        }
+        
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ 
+                msg: 'Token is not valid.',
+                error: 'INVALID_TOKEN'
+            });
+        }
+        
+        return res.status(401).json({ 
+            msg: 'Token is not valid.',
+            error: 'TOKEN_ERROR'
+        });
     }
 };
 
-module.exports = auth;
+export default auth; 

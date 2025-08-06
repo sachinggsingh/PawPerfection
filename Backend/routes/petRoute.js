@@ -1,11 +1,12 @@
-const express = require('express');
-const router = express.Router();
-const petCTRL = require('../controllers/petCTRL');
+import { Router } from 'express';
+const router = Router();
+import petCTRL from '../controllers/petCTRL';
+import auth from '../middleware/auth.js';
 
+router.post('/pet-profile', auth, petCTRL.createPet);
+router.get('/pet-profile/:id', auth, petCTRL.getPets);
+router.get('/pets', auth, petCTRL.getAllPets);
+router.put('/pet-profile/:id', auth, petCTRL.editPet);
+router.delete('/pet-profile/:id', auth, petCTRL.deletePet);
 
-router.post('/pet-profile',petCTRL.createPet);
-router.get('/pet-profile/:id',petCTRL.getPets);
-router.put('/pet-profile/:id',petCTRL.editPet);
-router.delete('/pet-profile/:id',petCTRL.deletePet);
-
-module.exports = router
+export default router

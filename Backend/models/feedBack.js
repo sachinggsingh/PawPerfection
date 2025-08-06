@@ -1,16 +1,23 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const feedBack = new mongoose.Schema ({
+const feedBackSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
+        validate: {
+            validator: function(v) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+            },
+            message: props => `${props.value} is not a valid email!`
+        }
     },
     message: {
         type: String,
         required: true,
+        maxlength: 100
     },
-},{
+}, {
     timestamps: true
-})
+});
 
-module.exports = mongoose.model("FeedBack", feedBack);
+export default mongoose.model("FeedBack", feedBackSchema);

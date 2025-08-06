@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react'
+import  { lazy, Suspense } from 'react'
 import LoadingSpinner from './components/LoadingSpinner'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -10,8 +10,6 @@ const Contact = lazy(()=>import ('./components/Contact'))
 const  SignUp = lazy(()=> import('./components/Signup'))
 const Login = lazy(()=> import('./components/Login'))
 const Page = lazy(()=> import('./pages/Home'))
-const Video = lazy(()=>import('./pages/Video'))
-
 const App = () => {
   return (
     <BrowserRouter> 
@@ -47,14 +45,6 @@ const App = () => {
           element={
             <Suspense fallback={<LoadingSpinner />}>
               <Courses />
-            </Suspense>
-          }
-        />
-      <Route 
-          path="/video" 
-          element={
-            <Suspense fallback={<LoadingSpinner />}>
-              <Video />
             </Suspense>
           }
         />
