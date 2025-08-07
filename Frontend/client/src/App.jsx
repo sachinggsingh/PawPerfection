@@ -1,15 +1,16 @@
 import  { lazy, Suspense } from 'react'
-import LoadingSpinner from './components/LoadingSpinner'
+import LoadingSpinner from './components/common/LoadingSpinner'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
 
 const Courses = lazy(()=>import ('./pages/Courses'))
 const PetPage  = lazy(()=>import ('./pages/PetPage'))
-const Contact = lazy(()=>import ('./components/Contact'))
-const  SignUp = lazy(()=> import('./components/Signup'))
-const Login = lazy(()=> import('./components/Login'))
+const Contact = lazy(()=>import ('./pages/Contact'))
+const  SignUp = lazy(()=> import('./components/auth/Signup'))
+const Login = lazy(()=> import('./components/auth/Login'))
 const Page = lazy(()=> import('./pages/Home'))
+const AuthCallback = lazy(()=> import('./components/auth/AuthCallback'))
 const App = () => {
   return (
     <BrowserRouter> 
@@ -45,6 +46,14 @@ const App = () => {
           element={
             <Suspense fallback={<LoadingSpinner />}>
               <Courses />
+            </Suspense>
+          }
+        />
+      <Route 
+          path="/auth/callback" 
+          element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <AuthCallback />
             </Suspense>
           }
         />

@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCourses } from "../redux/courses/courseSlice";
-import LoadingSpinner from "../components/LoadingSpinner";
+import { fetchCourses } from "../features/courses/courseSlice";
+import LoadingSpinner from "../components/common/LoadingSpinner";
 import CourseCard from "./CoursesCard";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Navbar from "../components/layout/Navbar";
+import Footer from "../components/layout/Footer";
 
 const CoursesPage = () => {
   return (

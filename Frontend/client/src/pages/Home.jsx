@@ -1,11 +1,11 @@
 import React from 'react';
-import Navbar from '../components/Navbar'
-import About from '../components/About'
-import Hero from '../components/Hero'
-import Services from '../components/Services'
-import Footer from '../components/Footer'
-import Testimonials from '../components/Testimonilas'
-import Trainers from '../components/Trainers'
+import Navbar from '../components/layout/Navbar'
+import About from '../components/common/About'
+import Hero from '../components/common/Hero'
+import Services from '../components/common/Services'
+import Footer from '../components/layout/Footer'
+import Testimonials from '../components/common/Testimonilas'
+import Trainers from '../components/common/Trainers'
 
 const Home = ()=>
 {

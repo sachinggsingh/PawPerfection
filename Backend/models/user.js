@@ -1,20 +1,30 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-    email: {
-        type: String,
-        required: true,
-        unique: true,
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    // password is optional for OAuth users
+    required: function () {
+      return !this.googleId;
     },
-    password: {
-        type: String,
-        required: true,
-    },
-    refreshToken: {
-        type: String,
-        default: null
-    }
+  },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true, // allows multiple nulls
+  },
+  name: {
+    type: String,
+  },
+  refreshToken: {
+    type: String,
+    default: null,
+  },
 }, { timestamps: true });
-
 
 export default mongoose.model('User', userSchema);

@@ -5,6 +5,8 @@ import { config } from 'dotenv';
 config();
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import passport from './utils/passport.js';
 
 
 // import auth from './middleware/auth';
@@ -43,6 +45,22 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
+// Session configuration
+app.use(session({
+  secret: process.env.SESSION_SECRET || process.env.JWT_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
+
+// Initialize passport
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Connect to MongoDB with error handling
 connect(process.env.MONNGODB_URI)
     .then(() => {
@@ -63,7 +81,7 @@ app.use('/api/pet', petRoutes);
 // app.use('/api/training', trainingRoutes);    
 app.use('/api/feedback', feedBackRoutes);
 
-const PORT = process.env.PORT || 5050;
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}`);
 });

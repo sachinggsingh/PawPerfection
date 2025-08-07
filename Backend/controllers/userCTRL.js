@@ -181,6 +181,30 @@ export const getProfile = async (req, res) => {
     console.error("Get profile error:", error);
     return res.status(500).json({ msg: "Failed to get profile" });
   }
-}; 
+};
 
-// check
+// Google OAuth callback handler
+export const googleAuthCallback = async (req, res) => {
+  try {
+    // User is already authenticated by passport
+    const user = req.user;
+    
+    if (!user) {
+      return res.status(401).json({ msg: "Authentication failed" });
+    }
+    
+    // Generate JWT tokens for the authenticated user
+    const { accessToken, refreshToken } = generateTokens(user._id);
+    
+    // Update user's refresh token in database
+    await User.findByIdAndUpdate(user._id, { refreshToken: refreshToken });
+    
+    // Redirect to frontend with tokens as URL parameters
+    const redirectUrl = `http://localhost:5173/auth/callback?accessToken=${accessToken}&refreshToken=${refreshToken}&userId=${user._id}&email=${encodeURIComponent(user.email)}`;
+    res.redirect(redirectUrl);
+    
+  } catch (error) {
+    console.error("Google OAuth callback error:", error);
+    res.redirect('http://localhost:5173/login?error=authentication_failed');
+  }
+}; 
