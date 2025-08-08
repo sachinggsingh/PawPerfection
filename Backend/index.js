@@ -10,10 +10,10 @@ import passport from './utils/passport.js';
 
 
 // import auth from './middleware/auth';
-import userRoutes from './routes/userRoutes';
-import petRoutes from './routes/petRoute';
-// import trainingRoutes from './routes/trainingRoutes';
-import feedBackRoutes from './routes/feedBack';
+import userRoutes from './routes/userRoutes.js';
+import petRoutes from './routes/petRoute.js';
+import trainingRoutes from './routes/trainingRoutes.js';
+import feedBackRoutes from './routes/feedBack.js';
 
 
 
@@ -78,7 +78,7 @@ app.get("/",(req,res)=>
 })
 app.use('/api/auth', userRoutes);
 app.use('/api/pet', petRoutes);
-// app.use('/api/training', trainingRoutes);    
+app.use('/api/training', trainingRoutes);    
 app.use('/api/feedback', feedBackRoutes);
 
 const PORT = process.env.PORT

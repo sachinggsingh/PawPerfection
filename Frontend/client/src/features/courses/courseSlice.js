@@ -6,7 +6,7 @@ export const fetchCourses = createAsyncThunk(
   "courses/getAllCourses",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get("/training/course");
+      const response = await api.get("/training/courses");
       const data = response.data;
 
       if (Array.isArray(data?.trainingPrograms)) {

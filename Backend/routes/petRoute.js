@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const router = Router();
-import petCTRL from '../controllers/petCTRL';
+import petCTRL from '../controllers/petCTRL.js';
 import auth from '../middleware/auth.js';
 
 router.post('/pet-profile', auth, petCTRL.createPet);

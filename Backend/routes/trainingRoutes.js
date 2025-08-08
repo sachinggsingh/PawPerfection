@@ -1,10 +1,14 @@
-// import { Router } from 'express'
-// const router = Router()
+import { Router } from 'express'
+const router = Router()
+import {createTrainingProgram,getTrainingPrograms,getTrainingProgramBtID,updateTrainingProgram,deleteTrainingProgram} from '../controllers/trainingCTRL.js'
 
-// router.get('/course',getAllTrainingPrograms)
-// router.get('/course/:id',getTrainingProgramById)
-// router.post('/create-course',createTrainingProgram)
-// router.put('/edit-course/:id',editTraining)
-// router.delete('/delete-course/:id',deleteTraining)
+import auth from '../middleware/auth.js'
 
-// export default router
+
+router.get('/courses',getTrainingPrograms);
+router.get('/courses/:id',auth,getTrainingProgramBtID);
+router.post('/courses',createTrainingProgram);
+router.put('/courses/:id',updateTrainingProgram);
+router.delete('/courses/:id',deleteTrainingProgram);
+
+export default router

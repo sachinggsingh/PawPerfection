@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const router = Router();
-import { createUser, loginUSer, logoutUSer, refreshToken, getProfile, googleAuthCallback } from '../controllers/userCTRL';
+import { createUser, loginUSer, logoutUSer, refreshToken, getProfile, googleAuthCallback } from '../controllers/userCTRL.js';
 import auth from '../middleware/auth.js';
 import passport from 'passport';
 

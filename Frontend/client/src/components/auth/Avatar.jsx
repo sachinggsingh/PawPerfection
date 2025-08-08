@@ -7,7 +7,7 @@ import { User, LogOut, Settings, PawPrint } from 'lucide-react';
 const Avatar = () => {
   const { user } = useSelector(state => state.auth);
 
-  console.log(user);
+  // console.log(user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

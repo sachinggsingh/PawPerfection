@@ -1,4 +1,6 @@
-import { sign, verify } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
+
+const {  verify } = jwt;
 
 // Generate access token (short-lived)
 export const generateAccessToken = (userId) => {
@@ -18,7 +20,7 @@ export const generateRefreshToken = (userId) => {
 export const verifyAccessToken = (token) => {
     try {
         return verify(token, process.env.JWT_SECRET);
-    } catch (error) {
+    } catch {
         return null;
     }
 };
@@ -27,18 +29,16 @@ export const verifyAccessToken = (token) => {
 export const verifyRefreshToken = (token) => {
     try {
         return verify(token, process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET);
-    } catch (error) {
+    } catch {
         return null;
     }
 };
 
 // Generate both tokens
-export const generateTokens = (userId) => {
-    return {
-        accessToken: generateAccessToken(userId),
-        refreshToken: generateRefreshToken(userId)
-    };
-};
+export const generateTokens = (userId) => ({
+    accessToken: generateAccessToken(userId),
+    refreshToken: generateRefreshToken(userId)
+});
 
 // Check if token is expired
 export const isTokenExpired = (token) => {
@@ -46,7 +46,7 @@ export const isTokenExpired = (token) => {
         const decoded = verify(token, process.env.JWT_SECRET, { ignoreExpiration: true });
         const now = Math.floor(Date.now() / 1000);
         return decoded.exp < now;
-    } catch (error) {
+    } catch {
         return true;
     }
-}; 
+};

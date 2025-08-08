@@ -63,7 +63,7 @@ const CourseCard = ({ course }) => {
             </div>
 
             {/* Resources (if any) */}
-            {course.resources && course.resources.length > 0 && (
+            {/* {course.resources && course.resources.length > 0 && (
               <div>
                 <p className="text-gray-700 font-semibold flex items-center gap-2 mb-2">
                   <FileText className="w-4 h-4 text-blue-600" />
@@ -74,14 +74,14 @@ const CourseCard = ({ course }) => {
                     <li key={index}>{res}</li>
                   ))}
                 </ul>
-                <button
+                </div>
+                )} */}
+                {/* <button
                   className="group cursor-pointer w-full px-4 py-3 mt-2 text-white bg-gradient-to-r from-blue-400 to-blue-500 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                   type="button"
                 >
                   Pay <IndianRupee />{course.price}
-                </button>
-              </div>
-            )}
+                </button> */}
           </div>
         </div>
       )}

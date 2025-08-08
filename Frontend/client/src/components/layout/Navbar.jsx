@@ -42,7 +42,6 @@ const Navbar = () => {
             {user ? (
               <>
                 <NavLink href='/' icon={<Home size={18} />} text="Home" />
-                <NavLink href="/about" icon={<Info size={18} />} text="About" />
                 <NavLink href="/contact" icon={<Mail size={18} />} text="Contact" />
                 <NavLink href="/course" icon={<FileType size={18} />} text="Courses" />
                 <Avatar />
@@ -79,7 +78,6 @@ const Navbar = () => {
           {user ? (
             <>
               <MobileNavLink href="/" icon={<Home size={18} />} text="Home" />
-              <MobileNavLink href="/about" icon={<Info size={18} />} text="About" />
               <MobileNavLink href="/contact" icon={<Mail size={18} />} text="Contact" />
               <MobileNavLink href="/course" icon={<FileType size={18} />} text="Courses" />
               <div className="mt-4 px-4">

@@ -44,7 +44,7 @@ const Hero = () => {
                 <Play className="h-5 w-5 mr-2" />
                 Start Training Now
               </button>
-              <button onClick={handleConsultation} className="inline-flex items-center px-6 py-3 rounded-lg border-2 border-gray-200 text-gray-700 font-semibold hover:border-primary-600 hover:text-primary-600 transition-colors duration-200">
+              <button onClick={handleConsultation} className="inline-flex items-center px-6 py-3 rounded-lg border-2 border-gray-200 text-gray-700 font-semibold hover:border-primary-600 hover:text-primary-600 transition-colors duration-200 ">
                 Free Consultation
               </button>
             </div>
