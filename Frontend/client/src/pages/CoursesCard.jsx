@@ -1,30 +1,44 @@
-import React, { useState } from "react";
-import { Book, Calendar, Check, FileText, X ,IndianRupee} from "lucide-react";
+import React, {  useState } from "react";
+import { Book, Calendar, Check, X, IndianRupee } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const CourseCard = ({ course }) => {
-  const [isOpen, setIsOpen] = useState(false); // Fix: Corrected state initialization
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
 
+  const handlePay = () => {
+    navigate(`/checkout/${course._id}`);
+  };
   return (
-    <div className="relative bg-gradient-to-br from-white/40 to-white/20 backdrop-blur-md rounded-2xl drop-shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/30 overflow-hidden group">
-      <div className="p-6 space-y-5 relative">
-        <div className="absolute top-0 right-0 w-32 h-32  rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-purple-500/50 transition-all duration-500"></div>
-        <CourseHeader
-          week={course.week}
-          price={course.price}
-          title={course.title}
-        />
-        <CourseContent tasks={course.task} />
-        <EnrollButton onClick={() => setIsOpen(true)} />
+    <>
+      {/* Course Card */}
+      <div className="relative bg-gradient-to-br from-white/40 to-white/20 backdrop-blur-md rounded-2xl drop-shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/30 overflow-hidden group">
+        <div className="p-6 space-y-5 relative">
+          <div className="absolute top-0 right-0 w-32 h-32 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-purple-500/50 transition-all duration-500"></div>
+          <CourseHeader week={course.week} price={course.price} title={course.title} />
+          <CourseContent tasks={course.task} />
+          <EnrollButton onClick={() => setIsOpen(true)} />
+        </div>
       </div>
 
+      {/* Bottom Sheet */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="w-full h-full max-h-full overflow-y-auto bg-white p-6 shadow-xl animate-slideUp">
+        <div className="fixed inset-0 z-50 flex flex-col justify-end">
+          {/* Overlay */}
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setIsOpen(false)}
+          ></div>
+
+          {/* Panel */}
+          <div
+            className={`relative bg-white rounded-t-2xl shadow-xl w-full max-h-[90vh] overflow-y-auto p-6 
+              transform transition-transform duration-300 ease-in-out
+              ${isOpen ? "translate-y-0" : "translate-y-full"}`}
+          >
             {/* Header */}
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-800">
-                Course Details
-              </h2>
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-bold text-gray-800">Course Details</h2>
               <button
                 onClick={() => setIsOpen(false)}
                 className="text-gray-500 hover:text-red-500"
@@ -33,12 +47,12 @@ const CourseCard = ({ course }) => {
               </button>
             </div>
 
-            {/* Course Title */}
+            {/* Title */}
             <h3 className="text-xl font-semibold text-purple-700 mb-2">
               {course.title}
             </h3>
 
-            {/* Week and Price */}
+            {/* Week + Price */}
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center gap-2 text-gray-600">
                 <Calendar className="w-5 h-5 text-purple-500" />
@@ -49,7 +63,7 @@ const CourseCard = ({ course }) => {
               </span>
             </div>
 
-            {/* Tasks */}
+            {/* Activities */}
             <div className="mb-4">
               <p className="text-gray-700 font-semibold flex items-center gap-2 mb-2">
                 <Check className="w-4 h-4 text-green-600" />
@@ -62,30 +76,18 @@ const CourseCard = ({ course }) => {
               </ul>
             </div>
 
-            {/* Resources (if any) */}
-            {/* {course.resources && course.resources.length > 0 && (
-              <div>
-                <p className="text-gray-700 font-semibold flex items-center gap-2 mb-2">
-                  <FileText className="w-4 h-4 text-blue-600" />
-                  <span>Resources</span>
-                </p>
-                <ul className="space-y-2 text-gray-600 ml-2 list-disc list-inside">
-                  {course.resources.map((res, index) => (
-                    <li key={index}>{res}</li>
-                  ))}
-                </ul>
-                </div>
-                )} */}
-                {/* <button
-                  className="group cursor-pointer w-full px-4 py-3 mt-2 text-white bg-gradient-to-r from-blue-400 to-blue-500 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-                  type="button"
-                >
-                  Pay <IndianRupee />{course.price}
-                </button> */}
+            {/* Pay Button */}
+            <button onClick={() => handlePay()}
+              className="mt-6 w-full px-4 py-3 text-white bg-gradient-to-r from-blue-400 to-blue-500 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg"
+              type="button"
+            >
+              <IndianRupee className="w-5 h-5" />
+              <span className="font-medium">Pay ₹{course.price}</span>
+            </button>
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
