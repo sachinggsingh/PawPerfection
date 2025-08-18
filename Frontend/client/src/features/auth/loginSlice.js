@@ -6,8 +6,11 @@ import api from "../../utils/api";
 export const login = createAsyncThunk("auth/login", async (data, { rejectWithValue }) => {
     try {
         const response = await api.post("/auth/login", data);
-        if(response.data.token) {
-            localStorage.setItem("token", response.data.token);
+        if(response.data?.accessToken) {
+            localStorage.setItem("accessToken", response.data.accessToken);
+        }
+        if(response.data?.refreshToken) {
+            localStorage.setItem("refreshToken", response.data.refreshToken);
         }
         return response.data;
     } catch (error) {
@@ -19,8 +22,11 @@ export const login = createAsyncThunk("auth/login", async (data, { rejectWithVal
 export const register = createAsyncThunk("auth/register", async (data, { rejectWithValue }) => {
     try {
         const response = await api.post("/auth/register", data);
-        if(response.data.token) {
-            localStorage.setItem("token", response.data.token);
+        if(response.data?.accessToken) {
+            localStorage.setItem("accessToken", response.data.accessToken);
+        }
+        if(response.data?.refreshToken) {
+            localStorage.setItem("refreshToken", response.data.refreshToken);
         }
         return response.data;
     } catch (error) {
@@ -31,10 +37,10 @@ export const register = createAsyncThunk("auth/register", async (data, { rejectW
 // Logout
 export const logout = createAsyncThunk("auth/logout", async (_, { rejectWithValue }) => {
     try {
-        const response = await api.post("/auth/logout");
-        if(response.data.token) {
-            localStorage.removeItem("token", response.data.token);
-        }
+        const refreshToken = localStorage.getItem("refreshToken");
+        const response = await api.post("/auth/logout", { refreshToken });
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         return response.data;
     } catch (error) {
         return rejectWithValue(error.response?.data || "Logout failed");
@@ -72,7 +78,7 @@ const authSlice = createSlice({
                 state.loading = false;
                 // state.status = "succeeded";
                 state.user = action.payload.user;
-                state.token = action.payload.token;
+                state.token = action.payload.accessToken;
             })
             .addCase(login.rejected, (state, action) => {
                 state.loading = false;
@@ -89,7 +95,7 @@ const authSlice = createSlice({
                 state.loading = false;
                 // state.status = "succeeded";
                 state.user = action.payload.user;
-                state.token = action.payload.token;
+                state.token = action.payload.accessToken;
                 // localStorage.setItem("user", JSON.stringify(action.payload.user));
                 // localStorage.setItem("token", action.payload.token);
             })

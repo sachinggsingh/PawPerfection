@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isLoading } = useSelector(state => state.auth);
+  const { loading } = useSelector(state => state.auth);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -38,13 +38,7 @@ const Login = () => {
     {
       const result = await dispatch(login({ email, password })).unwrap();
       console.log('Form submitted:', result);
-      {
-        isLoading && (
-          <div className="flex justify-center mb-4">
-            <LoadingSpinner />
-          </div>
-        )
-      }
+      // Optionally handle loading state in UI if needed
       navigate('/'); // Redirect to the dashboard after successful login
     }
     catch(error)

@@ -9,12 +9,11 @@ import { useNavigate } from 'react-router-dom';
 const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isLoading } = useSelector(state => state.auth);
+  const { loading } = useSelector(state => state.auth);
   const [form, setForm] = useState({
     name: '',
     email: '',
     password: '',
-    confirmPassword: '',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
@@ -48,13 +47,7 @@ const Signup = () => {
     try {
       const result = await dispatch(register(form)).unwrap();
       console.log('Form submitted:', result);
-      {
-        isLoading && (
-          <div className="flex justify-center mb-4">
-            <LoadingSpinner />
-          </div>
-        )
-      }
+      // Optionally handle loading state in UI if needed
       navigate('/login');
 
     }

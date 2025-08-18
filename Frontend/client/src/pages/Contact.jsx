@@ -1,132 +1,114 @@
-import { useState } from 'react';
-import { Send, PawPrint, Phone, Mail, MapPin, MessageSquare, Star, Check } from 'lucide-react';
-
+import { useState } from "react";
+import {
+  Send,
+  PawPrint,
+  Phone,
+  Mail,
+  MapPin,
+  MessageSquare,
+  Check,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Contact() {
-  // State for contact form
+  const navigate = useNavigate();
   const [contactForm, setContactForm] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    petType: '',
-    message: '',
+    name: "",
+    email: "",
+    phone: "",
+    petType: "",
+    message: "",
   });
-  
-  // State for feedback form
+
   const [feedbackForm, setFeedbackForm] = useState({
-    name: '',
-    email: '',
+    name: "",
+    email: "",
     rating: 5,
-    comment: '',
-    serviceUsed: '',
+    comment: "",
+    serviceUsed: "",
   });
-  
-  const [activeTab, setActiveTab] = useState('contact'); // 'contact' or 'feedback'
+
+  const [activeTab, setActiveTab] = useState("contact");
   const [submitted, setSubmitted] = useState(false);
-  
-  const handleContactChange = (e) => {
+
+  const handleChange = (e, formSetter) => {
     const { name, value } = e.target;
-    setContactForm((prev) => ({
+    formSetter((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
-  
-  const handleFeedbackChange = (e) => {
-    const { name, value } = e.target;
-    setFeedbackForm((prev) => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-  
-  const handleContactSubmit = (e) => {
+
+  const handleSubmit = (e, resetForm) => {
     e.preventDefault();
-    console.log('Contact form submitted:', contactForm);
     setSubmitted(true);
-    
     setTimeout(() => {
       setSubmitted(false);
-      setContactForm({
-        name: '',
-        email: '',
-        phone: '',
-        petType: '',
-        message: '',
-      });
-    }, 1000);
+      resetForm();
+    }, 2000);
   };
-  
-  const handleFeedbackSubmit = (e) => {
-    e.preventDefault();
-    console.log('Feedback form submitted:', feedbackForm);
-    setSubmitted(true);
-    
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setSubmitted(false);
-      setFeedbackForm({
-        name: '',
-        email: '',
-        comment: '',
-        serviceUsed: '',
-      });
-    }, 3000);
-  };
-  
+
   return (
-    <div className="bg-gradient-to-br from-gray-100 to-gray-300 min-h-screen text-gray-800 p-6 md:p-12">
+    <div className="bg-gradient-to-br from-gray-100 to-gray-300 min-h-screen p-6 md:p-12">
       <div className="max-w-6xl mx-auto">
+        <button
+          className="mb-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 text-white font-semibold py-2 px-5 rounded-lg shadow-md"
+          onClick={() => navigate("/")}
+        >
+          Home
+        </button>
+
         <div className="flex flex-col md:flex-row gap-12">
-          {/* Left Column - Contact Info */}
-          <div className="md:w-1/3 space-y-12">
+          {/* Left Info */}
+          <div className="md:w-1/3 space-y-10">
             <div>
               <h1 className="text-4xl font-bold mb-2 flex items-center text-gray-800">
-                <PawPrint className="mr-2" />
+                <PawPrint className="mr-2 text-purple-600" />
                 Get In Touch
               </h1>
-              <p className="text-gray-600 text-lg">
-                Connect with our expert trainers or leave us feedback about your experience.
+              <p className="text-gray-600 text-lg leading-relaxed">
+                Connect with our expert trainers or leave us feedback about
+                your experience.
               </p>
             </div>
-            
-            <div className="space-y-6">
-              <div className="flex items-start space-x-4">
-                <div className="bg-purple-100 p-3 rounded-lg">
-                  <Phone className="text-purple-600" />
-                </div>
+
+            {/* Contact Info */}
+            {[
+              {
+                icon: <Phone className="text-purple-600" />,
+                title: "Phone",
+                detail: "(555) 123-4567",
+              },
+              {
+                icon: <Mail className="text-purple-600" />,
+                title: "Email",
+                detail: "training@futurepets.com",
+              },
+              {
+                icon: <MapPin className="text-purple-600" />,
+                title: "Location",
+                detail: "123 Training Avenue\nPet City, PC 12345",
+              },
+            ].map((item, i) => (
+              <div key={i} className="flex items-start space-x-4">
+                <div className="bg-purple-100 p-3 rounded-lg">{item.icon}</div>
                 <div>
-                  <h3 className="font-medium text-purple-600">Phone</h3>
-                  <p className="text-lg text-gray-700">(555) 123-4567</p>
+                  <h3 className="font-medium text-purple-600">{item.title}</h3>
+                  <p className="text-lg text-gray-700 whitespace-pre-line">
+                    {item.detail}
+                  </p>
                 </div>
               </div>
-              
-              <div className="flex items-start space-x-4">
-                <div className="bg-purple-100 p-3 rounded-lg">
-                  <Mail className="text-purple-600" />
-                </div>
-                <div>
-                  <h3 className="font-medium text-purple-600">Email</h3>
-                  <p className="text-lg text-gray-700">training@futurepets.com</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start space-x-4">
-                <div className="bg-purple-100 p-3 rounded-lg">
-                  <MapPin className="text-purple-600" />
-                </div>
-                <div>
-                  <h3 className="font-medium text-purple-600">Location</h3>
-                  <p className="text-lg text-gray-700">123 Training Avenue<br />Pet City, PC 12345</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="pt-6">
-              <h3 className="text-xl font-semibold mb-2 text-gray-800">Operating Hours</h3>
+            ))}
+
+            {/* Hours */}
+            <div className="pt-4">
+              <h3 className="text-xl font-semibold mb-3 text-gray-800">
+                Operating Hours
+              </h3>
               <div className="space-y-2 text-gray-600">
                 <p className="flex justify-between">
-                  <span>Monday - Friday</span>
+                  <span>Mon - Fri</span>
                   <span>9:00 AM - 7:00 PM</span>
                 </p>
                 <p className="flex justify-between">
@@ -140,210 +122,229 @@ export default function Contact() {
               </div>
             </div>
           </div>
-          
-          {/* Right Column - Contact & Feedback Forms */}
+
+          {/* Right Form */}
           <div className="md:w-2/3">
-            <div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-xl">
+            <div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-lg">
               {submitted ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center space-y-6">
-                  <div className="bg-purple-600 p-4 rounded-full">
+                  <div className="bg-purple-600 p-4 rounded-full shadow-lg">
                     <Check size={48} className="text-white" />
                   </div>
-                  <h2 className="text-3xl font-bold text-gray-800">Submitted Successfully!</h2>
+                  <h2 className="text-3xl font-bold text-gray-800">
+                    Submitted Successfully!
+                  </h2>
                   <p className="text-gray-600 text-lg max-w-md">
-                    Thank you for reaching out. Our team will process your submission shortly.
+                    Thank you for reaching out. Our team will process your
+                    submission shortly.
                   </p>
                 </div>
               ) : (
                 <>
-                  {/* Tab Navigation */}
+                  {/* Tabs */}
                   <div className="flex mb-8 border-b border-gray-200">
-                    <button
-                      className={`px-6 py-3 font-medium ${activeTab === 'contact' 
-                        ? 'text-purple-700 border-b-2 border-purple-600' 
-                        : 'text-gray-500 hover:text-blue-600'}`}
-                      onClick={() => setActiveTab('contact')}
-                    >
-                      <Phone className="inline-block mr-2 w-5 h-5" />
-                      Contact Us
-                    </button>
-                    <button
-                      className={`px-6 py-3 font-medium ${activeTab === 'feedback' 
-                        ? 'text-purple-700 border-b-2 border-purple-600' 
-                        : 'text-gray-500 hover:text-blue-600'}`}
-                      onClick={() => setActiveTab('feedback')}
-                    >
-                      <MessageSquare className="inline-block mr-2 w-5 h-5" />
-                      Leave Feedback
-                    </button>
-                  </div>
-                  
-                  {/* Contact Form */}
-                  {activeTab === 'contact' && (
-                    <form onSubmit={handleContactSubmit} className="space-y-6">
-                      <h2 className="text-2xl font-bold mb-6">Send Us a Message</h2>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <label className="block text-blue-300 mb-2" htmlFor="name">Your Name</label>
-                          <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            value={contactForm.name}
-                            onChange={handleContactChange}
-                            required
-                            className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
-                            placeholder="John Smith"
-                          />
-                        </div>
-                        
-                        <div>
-                          <label className="block text-blue-300 mb-2" htmlFor="email">Email Address</label>
-                          <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={contactForm.email}
-                            onChange={handleContactChange}
-                            required
-                            className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
-                            placeholder="your@email.com"
-                          />
-                        </div>
-                        
-                        <div>
-                          <label className="block text-blue-300 mb-2" htmlFor="phone">Phone Number</label>
-                          <input
-                            type="tel"
-                            id="phone"
-                            name="phone"
-                            value={contactForm.phone}
-                            onChange={handleContactChange}
-                            className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
-                            placeholder="(555) 123-4567"
-                          />
-                        </div>
-                        
-                        <div>
-                          <label className="block text-blue-300 mb-2" htmlFor="petType">Pet Type</label>
-                          <select
-                            id="petType"
-                            name="petType"
-                            value={contactForm.petType}
-                            onChange={handleContactChange}
-                            required
-                            className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
-                          >
-                            <option value="">Select your pet</option>
-                            <option value="dog">Dog</option>
-                            <option value="cat">Cat</option>
-                            <option value="bird">Bird</option>
-                            <option value="exotic">Exotic</option>
-                            <option value="other">Other</option>
-                          </select>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-blue-300 mb-2" htmlFor="message">Your Message</label>
-                        <textarea
-                          id="message"
-                          name="message"
-                          value={contactForm.message}
-                          onChange={handleContactChange}
-                          required
-                          rows="5"
-                          className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
-                          placeholder="Tell us about your training needs..."
-                        ></textarea>
-                      </div>
-                      
+                    {[
+                      {
+                        key: "contact",
+                        label: "Contact Us",
+                        icon: <Phone className="inline-block mr-2 w-5 h-5" />,
+                      },
+                      {
+                        key: "feedback",
+                        label: "Leave Feedback",
+                        icon: (
+                          <MessageSquare className="inline-block mr-2 w-5 h-5" />
+                        ),
+                      },
+                    ].map((tab) => (
                       <button
-                        type="submit"
-                        className="bg-purple-600 hover:bg-blue-600 px-6 py-3 rounded-lg font-medium flex items-center transition-all duration-300 hover:shadow-lg text-white"
+                        key={tab.key}
+                        className={`px-6 py-3 font-medium transition-all duration-300 ${
+                          activeTab === tab.key
+                            ? "text-purple-700 border-b-2 border-purple-600"
+                            : "text-gray-500 hover:text-blue-600"
+                        }`}
+                        onClick={() => setActiveTab(tab.key)}
                       >
-                        Send Message
-                        <Send className="ml-2 w-5 h-5" />
+                        {tab.icon}
+                        {tab.label}
                       </button>
-                    </form>
-                  )}
-                  
-                  {/* Feedback Form */}
-                  {activeTab === 'feedback' && (
-                    <form onSubmit={handleFeedbackSubmit} className="space-y-6">
-                      <h2 className="text-2xl font-bold mb-6">Share Your Experience</h2>
-                      
+                    ))}
+                  </div>
+
+                  {/* Contact Form */}
+                  {activeTab === "contact" && (
+                    <form
+                      onSubmit={(e) =>
+                        handleSubmit(e, () =>
+                          setContactForm({
+                            name: "",
+                            email: "",
+                            phone: "",
+                            petType: "",
+                            message: "",
+                          })
+                        )
+                      }
+                      className="space-y-6"
+                    >
+                      <h2 className="text-2xl font-bold mb-6">
+                        Send Us a Message
+                      </h2>
+
+                      {/* Name + Email */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <label className="block text-blue-300 mb-2" htmlFor="feedback-name">Your Name</label>
-                          <input
-                            type="text"
-                            id="feedback-name"
-                            name="name"
-                            value={feedbackForm.name}
-                            onChange={handleFeedbackChange}
-                            required
-                            className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
-                            placeholder="John Smith"
-                          />
-                        </div>
-                        
-                        <div>
-                        <label className="block text-blue-300 mb-2" htmlFor="feedback-name">Your Name</label>
-                          <input
-                            type="email"
-                            id="feedback-email"
-                            name="email"
-                            value={feedbackForm.email}
-                            onChange={handleFeedbackChange}
-                            required
-                            className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
-                            placeholder="xyz@gmail.com"
-                          />
-                        </div>
+                        {[
+                          {
+                            id: "contact-name",
+                            name: "name",
+                            type: "text",
+                            placeholder: "John Smith",
+                            value: contactForm.name,
+                          },
+                          {
+                            id: "contact-email",
+                            name: "email",
+                            type: "email",
+                            placeholder: "your@email.com",
+                            value: contactForm.email,
+                          },
+                        ].map((field) => (
+                          <div key={field.id}>
+                            <input
+                              {...field}
+                              required
+                              onChange={(e) =>
+                                handleChange(e, setContactForm)
+                              }
+                              className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                            />
+                          </div>
+                        ))}
                       </div>
-                      
-                      <div>
-                        <label className="block text-blue-300 mb-2" htmlFor="serviceUsed">Service Used</label>
+
+                      {/* Phone + Pet Type */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <input
+                          type="tel"
+                          name="phone"
+                          placeholder="(555) 123-4567"
+                          value={contactForm.phone}
+                          onChange={(e) => handleChange(e, setContactForm)}
+                          className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                        />
                         <select
-                          id="serviceUsed"
-                          name="serviceUsed"
-                          value={feedbackForm.serviceUsed}
-                          onChange={handleFeedbackChange}
+                          name="petType"
+                          value={contactForm.petType}
+                          onChange={(e) => handleChange(e, setContactForm)}
                           required
-                          className="w-full bg-white/5 border border-blue-700/50 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
                         >
-                          <option value="">Select a service</option>
-                          <option value="obedience">Basic Obedience Training</option>
-                          <option value="behavioral">Behavioral Correction</option>
-                          <option value="puppy">Puppy Classes</option>
-                          <option value="agility">Agility Training</option>
-                          <option value="virtual">Virtual Consultation</option>
+                          <option value="">Select your pet</option>
+                          <option value="dog">Dog</option>
+                          <option value="cat">Cat</option>
+                          <option value="bird">Bird</option>
+                          <option value="exotic">Exotic</option>
                           <option value="other">Other</option>
                         </select>
                       </div>
-                      
-                      <div>
-                        <label className="block text-blue-300 mb-2" htmlFor="comment">Your Feedback</label>
-                        <textarea
-                          id="comment"
-                          name="comment"
-                          value={feedbackForm.comment}
-                          onChange={handleFeedbackChange}
-                          required
-                          rows="4"
-                          className="w-full bg-white/5 border border-blue-700/50 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Tell us about your experience..."
-                        ></textarea>
-                      </div>
-                      
+
+                      {/* Message */}
+                      <textarea
+                        name="message"
+                        value={contactForm.message}
+                        onChange={(e) => handleChange(e, setContactForm)}
+                        required
+                        rows="5"
+                        placeholder="Tell us about your training needs..."
+                        className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                      ></textarea>
+
                       <button
                         type="submit"
-                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 px-6 py-3 rounded-lg font-medium flex items-center transition-all duration-300 hover:shadow-lg"
+                        className="bg-gradient-to-r from-purple-600 to-blue-600 hover:opacity-90 px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-all duration-300 hover:shadow-lg text-white"
+                      >
+                        Send Message
+                        <Send className="w-5 h-5" />
+                      </button>
+                    </form>
+                  )}
+
+                  {/* Feedback Form */}
+                  {activeTab === "feedback" && (
+                    <form
+                      onSubmit={(e) =>
+                        handleSubmit(e, () =>
+                          setFeedbackForm({
+                            name: "",
+                            email: "",
+                            rating: 5,
+                            comment: "",
+                            serviceUsed: "",
+                          })
+                        )
+                      }
+                      className="space-y-6"
+                    >
+                      <h2 className="text-2xl font-bold mb-6">
+                        Share Your Experience
+                      </h2>
+                      {/* Name + Email */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <input
+                          type="text"
+                          name="name"
+                          placeholder="John Smith"
+                          value={feedbackForm.name}
+                          onChange={(e) => handleChange(e, setFeedbackForm)}
+                          required
+                          className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                        />
+                        <input
+                          type="email"
+                          name="email"
+                          placeholder="xyz@gmail.com"
+                          value={feedbackForm.email}
+                          onChange={(e) => handleChange(e, setFeedbackForm)}
+                          required
+                          className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                        />
+                      </div>
+
+                      {/* Service */}
+                      <select
+                        name="serviceUsed"
+                        value={feedbackForm.serviceUsed}
+                        onChange={(e) => handleChange(e, setFeedbackForm)}
+                        required
+                        className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                      >
+                        <option value="">Select a service</option>
+                        <option value="obedience">Basic Obedience Training</option>
+                        <option value="behavioral">Behavioral Correction</option>
+                        <option value="puppy">Puppy Classes</option>
+                        <option value="agility">Agility Training</option>
+                        <option value="virtual">Virtual Consultation</option>
+                        <option value="other">Other</option>
+                      </select>
+
+                      {/* Comment */}
+                      <textarea
+                        name="comment"
+                        value={feedbackForm.comment}
+                        onChange={(e) => handleChange(e, setFeedbackForm)}
+                        required
+                        rows="4"
+                        placeholder="Tell us about your experience..."
+                        className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                      ></textarea>
+
+                      <button
+                        type="submit"
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-all duration-300 hover:shadow-lg text-white"
                       >
                         Submit Feedback
-                        <MessageSquare className="ml-2 w-5 h-5" />
+                        <MessageSquare className="w-5 h-5" />
                       </button>
                     </form>
                   )}

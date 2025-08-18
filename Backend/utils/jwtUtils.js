@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const {  verify } = jwt;
+const { sign, verify } = jwt;
 
 // Generate access token (short-lived)
 export const generateAccessToken = (userId) => {
