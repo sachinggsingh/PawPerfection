@@ -14,7 +14,9 @@ import userRoutes from './routes/userRoutes.js';
 import petRoutes from './routes/petRoute.js';
 import trainingRoutes from './routes/trainingRoutes.js';
 import feedBackRoutes from './routes/feedBack.js';
-
+import paymentRoutes from './routes/paymentRoutes.js';
+import webhookRoutes from './webhook/stripe.webhook.js';
+    
 
 
 // Check if MONNGODB_URI is defined
@@ -33,6 +35,9 @@ if (!process.env.JWT_SECRET) {
 if (!process.env.JWT_REFRESH_SECRET) {
     console.warn('JWT_REFRESH_SECRET is not defined, using JWT_SECRET for refresh tokens');
 }
+
+// Mount webhook BEFORE body parsers to preserve raw body for signature verification
+app.use('/api/webhook', webhookRoutes);
 
 app.use(json());
 app.use(urlencoded({ extended: true }));
@@ -80,6 +85,7 @@ app.use('/api/auth', userRoutes);
 app.use('/api/pet', petRoutes);
 app.use('/api/training', trainingRoutes);    
 app.use('/api/feedback', feedBackRoutes);
+app.use('/api/payment', paymentRoutes);
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {

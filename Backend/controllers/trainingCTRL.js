@@ -127,8 +127,8 @@ export const getTrainingPrograms = async (req, res) => {
 }
 export const getTrainingProgramBtID = async (req, res) => {
   try {
-    const { trainingId } = req.params;
-    const trainingModel = await Training.findById({ trainingId });
+    const { id } = req.params;
+    const trainingModel = await Training.findById(id);
 
     if (!trainingModel)
       return res
@@ -137,7 +137,7 @@ export const getTrainingProgramBtID = async (req, res) => {
     return res.status(200).json({
       msg: "Training program fetched successfully.",
       success: true,
-      trainingProgram,
+      trainingProgram: trainingModel,
     });
   } catch (error) {
     console.log(error);

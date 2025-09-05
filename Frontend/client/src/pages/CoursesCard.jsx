@@ -1,13 +1,44 @@
 import React, {  useState } from "react";
 import { Book, Calendar, Check, X, IndianRupee } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+import api from "../utils/api";
 
 const CourseCard = ({ course }) => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
 
-  const handlePay = () => {
-    navigate(`/checkout/${course._id}`);
+  const handlePay = async () => {
+    try {
+      setIsPaying(true);
+      const payload = {
+        price: course.price,
+        trainingProgramId: course._id,
+      };
+      const { data } = await api.post("/payment/create-payment", payload);
+
+      // Prefer session.url if provided by Stripe
+      const checkoutUrl = data?.session?.url;
+      const sessionId = data?.session?.id;
+
+      if (checkoutUrl) {
+        window.location.href = checkoutUrl;
+        return;
+      }
+
+      // Fallback: redirect using session id if client integration expects it
+      if (sessionId) {
+        window.location.href = `${window.location.origin}/payment/success?session_id=${sessionId}`;
+        return;
+      }
+
+      throw new Error("Unable to start checkout. Missing session URL.");
+    } catch (error) {
+      console.error("Payment error:", error);
+      alert(error.response?.data?.msg || error.message || "Payment failed to initialize.");
+    } finally {
+      setIsPaying(false);
+    }
   };
   return (
     <>
@@ -77,12 +108,13 @@ const CourseCard = ({ course }) => {
             </div>
 
             {/* Pay Button */}
-            <button onClick={() => handlePay()}
-              className="mt-6 w-full px-4 py-3 text-white bg-gradient-to-r from-blue-400 to-blue-500 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg"
+            <button onClick={handlePay}
+              disabled={isPaying}
+              className={`mt-6 w-full px-4 py-3 text-white rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg ${isPaying ? 'bg-blue-300 cursor-not-allowed' : 'bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-700 hover:to-blue-800'}`}
               type="button"
             >
               <IndianRupee className="w-5 h-5" />
-              <span className="font-medium">Pay ₹{course.price}</span>
+              <span className="font-medium">{isPaying ? 'Processing...' : `Pay ₹${course.price}`}</span>
             </button>
           </div>
         </div>
