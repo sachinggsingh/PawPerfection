@@ -161,7 +161,7 @@ const PetPage = ({ onSubmit }) => {
                     }
                   `}
                 >
-                  <Sparkles className="w-5 h-5" />
+                  <PawPrint className="w-5 h-5" />
                   <span>
                     {isSubmitting ? "Registering..." : "Register Pet"}
                   </span>

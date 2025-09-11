@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import LoadingSpinner from "./components/common/LoadingSpinner";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Profile } from "./pages/Profile";
 
 const Courses = lazy(() => import("./pages/Courses"));
 const CourseContent = lazy(() => import("./pages/CourseContent"));
@@ -52,7 +53,7 @@ const App = () => {
           />
           <Route path="/contact" element={<Contact />} />
           <Route
-            path="/courses"
+            path="/course"
             element={
               <Suspense fallback={<LoadingSpinner />}>
                 <Courses />
@@ -91,7 +92,15 @@ const App = () => {
               </Suspense>
             }
           />
-        </Routes>
+          <Route
+            path="/profile"
+            element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <Profile />
+              </Suspense>
+            }
+            />
+            </Routes>
       </BrowserRouter>
   );
 };
