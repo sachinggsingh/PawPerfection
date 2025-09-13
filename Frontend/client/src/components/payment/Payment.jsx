@@ -17,7 +17,7 @@ function CheckoutForm() {
     const res = await fetch("http://localhost:3000/api/payment/create-payment", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ price: 50000, trainingProgramId: "671616161616161616161616" }) // 500 INR
+      // body: JSON.stringify({ price:  trainingProgramId: "671616161616161616161616" }) // 500 INR
     });
     const { clientSecret } = await res.json();
 
@@ -51,6 +51,7 @@ function CheckoutForm() {
 export default function App() {
   return (
     <Elements stripe={stripePromise}>
+
       <CheckoutForm />
     </Elements>
   );

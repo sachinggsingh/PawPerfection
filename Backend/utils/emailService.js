@@ -1,12 +1,11 @@
 import nodemailer from 'nodemailer';
 
-// Create transporter for email sending
 const createTransporter = () => {
     return nodemailer.createTransport({
-        service: 'gmail', // You can change this to your preferred email service
+        service: 'gmail', 
         auth: {
-            user: process.env.EMAIL_USER, // Your email
-            pass: process.env.EMAIL_PASSWORD // Your email password or app password
+            user: process.env.STMP_EMAIL, 
+            pass: process.env.SMTP_PASSWORD 
         }
     });
 };
@@ -131,7 +130,6 @@ const getConfirmationEmailTemplate = (data) => {
     </html>
     `;
 };
-
 const getCancellationEmailTemplate = (data) => {
     return `
     <!DOCTYPE html>
@@ -247,6 +245,105 @@ const getCancellationEmailTemplate = (data) => {
     </html>
     `;
 };
+const getLoginEmailTemplate = (data) => {
+    return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login Alert - PawPerfection</title>
+        <style>
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: #333;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f4f4f4;
+            }
+            .container {
+                background-color: white;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            }
+            .header {
+                text-align: center;
+                border-bottom: 3px solid #4CAF50;
+                padding-bottom: 20px;
+                margin-bottom: 30px;
+            }
+            .logo {
+                font-size: 28px;
+                font-weight: bold;
+                color: #4CAF50;
+                margin-bottom: 10px;
+            }
+            .info {
+                background-color: #f8f9fa;
+                padding: 20px;
+                border-radius: 8px;
+                margin: 20px 0;
+                border-left: 4px solid #4CAF50;
+            }
+            .footer {
+                text-align: center;
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 1px solid #eee;
+                color: #666;
+                font-size: 14px;
+            }
+            .button {
+                display: inline-block;
+                background-color: #ff6b6b;
+                color: white;
+                padding: 12px 30px;
+                text-decoration: none;
+                border-radius: 5px;
+                margin: 20px 0;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <div class="logo">🐾 PawPerfection</div>
+                <h1>New Login Alert</h1>
+            </div>
+            
+            <p>Hi ${data.userName},</p>
+            <p>We noticed a new login to your PawPerfection account:</p>
+            
+            <div class="info">
+                <p><strong>Date:</strong> ${data.loginDate.toLocaleString()}</p>
+                <p><strong>IP Address:</strong> ${data.ip || "Unknown"}</p>
+                <p><strong>Device:</strong> ${data.device || "Not detected"}</p>
+                <p><strong>Location:</strong> ${data.location || "Not available"}</p>
+            </div>
+            
+            <p>If this was you, no further action is required.</p>
+            <p>If you did <strong>not</strong> login, please secure your account immediately by resetting your password.</p>
+            
+            <div style="text-align: center;">
+                <a href="${process.env.FRONTEND_URL}/reset-password" class="button">
+                    Reset Password
+                </a>
+            </div>
+            
+            <div class="footer">
+                <p>Stay safe,<br>The PawPerfection Team</p>
+                <p><small>This is an automated email. Please do not reply to this message.</small></p>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
+};
+
 
 // Send payment confirmation email
 export const sendPaymentConfirmationEmail = async (data) => {
@@ -254,7 +351,7 @@ export const sendPaymentConfirmationEmail = async (data) => {
         const transporter = createTransporter();
         
         const mailOptions = {
-            from: process.env.EMAIL_USER,
+            from: process.env.STMP_EMAIL,
             to: data.userEmail,
             subject: `Payment Confirmed - ${data.courseTitle} | PawPerfection`,
             html: getConfirmationEmailTemplate(data)
@@ -268,14 +365,13 @@ export const sendPaymentConfirmationEmail = async (data) => {
         throw error;
     }
 };
-
 // Send payment cancellation email
 export const sendPaymentCancellationEmail = async (data) => {
     try {
         const transporter = createTransporter();
         
         const mailOptions = {
-            from: process.env.EMAIL_USER,
+            from: process.env.STMP_EMAIL,
             to: data.userEmail,
             subject: `Payment Update - ${data.courseTitle} | PawPerfection`,
             html: getCancellationEmailTemplate(data)
@@ -289,24 +385,24 @@ export const sendPaymentCancellationEmail = async (data) => {
         throw error;
     }
 };
-
-// Test email function
-export const sendTestEmail = async (to, subject, html) => {
+// Send login notification email
+export const sendLoginNotificationEmail = async (data) => {
     try {
         const transporter = createTransporter();
         
         const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: to,
-            subject: subject,
-            html: html
+            from: process.env.STMP_EMAIL,
+            to: data.userEmail,
+            subject: `New Login Alert | PawPerfection`,
+            html: getLoginEmailTemplate(data)
         };
 
         const result = await transporter.sendMail(mailOptions);
-        console.log('Test email sent successfully:', result.messageId);
+        console.log('Login notification email sent:', result.messageId);
         return result;
     } catch (error) {
-        console.error('Error sending test email:', error);
+        console.error('Error sending login email:', error);
         throw error;
     }
 };
+

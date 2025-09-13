@@ -20,7 +20,7 @@ const PaymentSuccess = () => {
           <p className="text-xs text-gray-500 mb-4">Session ID: {sessionId}</p>
         )}
         <button
-          onClick={() => navigate("/courses")}
+          onClick={() => navigate("/course")}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
           Go to Courses
