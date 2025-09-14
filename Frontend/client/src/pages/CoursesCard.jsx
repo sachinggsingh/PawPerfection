@@ -15,26 +15,31 @@ const CourseCard = ({ course }) => {
         price: course.price,
         trainingProgramId: course._id,
       };
+      
+      console.log("Creating payment with payload:", payload);
       const { data } = await api.post("/payment/create-payment", payload);
+      console.log("Payment response:", data);
 
-      // Prefer session.url if provided by Stripe
-      const checkoutUrl = data?.session?.url;
-      const sessionId = data?.session?.id;
-
-      if (checkoutUrl) {
-        window.location.href = checkoutUrl;
+      // Check if payment was created successfully
+      if (data.success && data.data && data.data.url) {
+        console.log("Redirecting to Stripe checkout:", data.data.url);
+        // Redirect to Stripe Checkout
+        window.location.href = data.data.url;
         return;
       }
 
-      // Fallback: redirect using session id if client integration expects it
-      if (sessionId) {
-        window.location.href = `${window.location.origin}/payment/success?session_id=${sessionId}`;
-        return;
-      }
+      // More detailed error logging
+      console.error("Payment creation failed:", {
+        success: data.success,
+        hasData: !!data.data,
+        hasUrl: data.data?.url,
+        fullResponse: data
+      });
 
-      throw new Error("Unable to start checkout. Missing session URL.");
+      throw new Error(`Unable to start checkout. Response: ${JSON.stringify(data)}`);
     } catch (error) {
       console.error("Payment error:", error);
+      console.error("Error response:", error.response?.data);
       alert(error.response?.data?.msg || error.message || "Payment failed to initialize.");
     } finally {
       setIsPaying(false);

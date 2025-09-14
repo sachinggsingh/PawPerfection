@@ -24,7 +24,8 @@ const paymentSchema = new mongoose.Schema({
     status:{
         type:String,
         required:true,
-        default:"pending"
+        default:"pending",
+        enum: ["pending", "completed", "failed", "canceled", "expired", "refunded"]
     },
     paymentOrderId:{
         type:String,
@@ -34,7 +35,8 @@ const paymentSchema = new mongoose.Schema({
     paymentMethod:{
         type:String,
         required:true,
-        default:"pending"
+        default:"card",
+        enum: ["card", "upi", "netbanking", "wallet", "pending"]
     },
     paymentDate:{
         type:Date,
@@ -44,12 +46,14 @@ const paymentSchema = new mongoose.Schema({
     paymentStatus:{
         type:String,
         required:true,
-        default:"pending"
+        default:"pending",
+        enum: ["pending", "completed", "failed", "canceled", "expired", "refunded"]
     },
     paymentCurrency:{
         type:String,
         required:true,
-        default:"INR"
+        default:"INR",
+        enum: ["INR", "USD", "EUR", "GBP"]
     },
 }, {
     timestamps: true
