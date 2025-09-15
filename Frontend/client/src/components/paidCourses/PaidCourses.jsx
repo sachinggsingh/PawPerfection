@@ -1,32 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import LoadingSpinner from "../common/LoadingSpinner";
+import { getAllPaidCourses } from "../../features/paidCourses/paidCourses";
 
 export const PaidCourses = () => {
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+
+  const { courses, loading, error } = useSelector(
+    (state) => state.paidCourses
+  );
 
   useEffect(() => {
-    fetchPurchasedCourses();
-  }, []);
-
-  const fetchPurchasedCourses = async () => {
-    try {
-      const response = await api.get("/courses/purchased"); 
-      // 👆 make sure your backend has this endpoint
-      if (response.data.success) {
-        setCourses(response.data.courses || []);
-      }
-    } catch (error) {
-      console.error("Error fetching purchased courses:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    dispatch(getAllPaidCourses());
+  }, [dispatch]);
 
   if (loading) {
     return (
       <div className="flex justify-center py-6">
         <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center text-red-500 py-6">
+        {error}
       </div>
     );
   }
@@ -41,7 +40,9 @@ export const PaidCourses = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-gray-800">Your Purchased Courses</h2>
+      <h2 className="text-xl font-semibold text-gray-800">
+        Your Purchased Courses
+      </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {courses.map((course) => (
           <div
@@ -54,14 +55,23 @@ export const PaidCourses = () => {
               className="w-full h-40 object-cover"
             />
             <div className="p-4">
-              <h3 className="text-lg font-semibold text-gray-800">{course.title}</h3>
-              <p className="text-gray-600 text-sm">{course.description?.slice(0, 80)}...</p>
+              <h3 className="text-lg font-semibold text-gray-800">
+                {course.title}
+              </h3>
+              <p className="text-gray-600 text-sm">
+                {course.description?.slice(0, 80)}...
+              </p>
               <div className="mt-4 flex justify-between items-center">
                 <span className="text-sm text-gray-500">
-                  Purchased on {new Date(course.purchasedAt).toLocaleDateString()}
+                  Purchased on{" "}
+                  {course.purchasedAt
+                    ? new Date(course.purchasedAt).toLocaleDateString()
+                    : "N/A"}
                 </span>
                 <button
-                  onClick={() => window.location.href = `/courses/${course._id}`}
+                  onClick={() =>
+                    (window.location.href = `/courses/${course._id}`)
+                  }
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   View Course

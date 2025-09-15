@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import PaymentHistory from "../components/payment/PaymentHistory";
@@ -21,15 +21,12 @@ export const Profile = () => {
   const fetchUserProfile = async () => {
     try {
       const response = await api.get('/auth/profile');
-      if (response.data.success) {
-        // if you're using redux auth slice, no need to setUser here
-        // setUser(response.data.user);
+      if (response?.data?.user) {
+        useDispatch(user(response.data.user));
       }
     } catch (error) {
       console.error('Profile fetch error:', error);
-    } finally {
-      // setLoading(false); // handled by redux if loading is in store
-    }
+    } 
   };
 
   const handleLogout = () => {
@@ -70,12 +67,6 @@ export const Profile = () => {
                   {user?.name || user?.email?.split('@')[0] || 'U'}
                 </h1>
                 <p className="text-gray-600">{user?.email}</p>
-                <p className="text-sm text-gray-500">
-                  Member since{" "}
-                  {user?.createdAt
-                    ? new Date(user.createdAt).toLocaleDateString()
-                    : "N/A"}
-                </p>
               </div>
             </div>
           </div>
@@ -140,40 +131,18 @@ export const Profile = () => {
                         {user?.email}
                       </div>
                     </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Account Created
-                      </label>
-                      <div className="p-3 bg-gray-50 rounded-lg border">
-                        {user?.createdAt
-                          ? new Date(user.createdAt).toLocaleDateString()
-                          : "N/A"}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Last Updated
-                      </label>
-                      <div className="p-3 bg-gray-50 rounded-lg border">
-                        {user?.updatedAt
-                          ? new Date(user.updatedAt).toLocaleDateString()
-                          : "N/A"}
-                      </div>
-                    </div>
                   </div>
 
-                  <div className="flex space-x-4 pt-6">
+                  <div className="flex space-x-4 pt-2 ">
                     <button
-                      onClick={() => navigate('/courses')}
-                      className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                      onClick={() => navigate('/course')}
+                      className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
                     >
                       Browse Courses
                     </button>
                     <button
                       onClick={handleLogout}
-                      className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors"
+                      className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
                     >
                       Logout
                     </button>

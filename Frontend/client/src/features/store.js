@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // localStorage
 import { combineReducers } from 'redux';
+import paidCourseSlice from './paidCourses/paidCourses';
 
 import authSlice from './auth/loginSlice';
 import courseSlice from './courses/courseSlice';
@@ -9,6 +10,7 @@ import courseSlice from './courses/courseSlice';
 const rootReducer = combineReducers({
   auth: authSlice,
   course: courseSlice,
+  paidCourse:paidCourseSlice
 });
 
 // Configuration for redux-persist
