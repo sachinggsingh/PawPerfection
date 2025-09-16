@@ -65,7 +65,7 @@ const PaymentSuccess = () => {
           <p className="text-gray-600 mb-6">{error}</p>
           <div className="space-y-3">
             <button
-              onClick={() => navigate("/courses")}
+              onClick={() => navigate("/course")}
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
             >
               Back to Courses
@@ -172,7 +172,7 @@ const PaymentSuccess = () => {
             {/* Action Buttons */}
             <div className="space-y-4">
               <button
-                onClick={() => navigate("/courses")}
+                onClick={() => navigate("/course")}
                 className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
               >
                 View All Courses

@@ -72,7 +72,7 @@ const CourseViewer = () => {
   };
 
   const handleBackToCourses = () => {
-    navigate('/courses');
+    navigate('/course');
   };
 
   if (courseLoading) {

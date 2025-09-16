@@ -6,7 +6,7 @@ const Hero = () => {
   const navigate = useNavigate()
 
   const handleStartTraining = () => {
-    navigate('/courses');
+    navigate('/course');
   };
 
   const handleConsultation = () => {
