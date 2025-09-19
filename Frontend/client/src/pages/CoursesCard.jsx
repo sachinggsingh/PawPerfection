@@ -1,10 +1,9 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { Book, Calendar, Check, X, IndianRupee } from "lucide-react";
 // import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
 
 const CourseCard = ({ course }) => {
-  // const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
 
@@ -20,15 +19,12 @@ const CourseCard = ({ course }) => {
       const { data } = await api.post("/payment/create-payment", payload);
       console.log("Payment response:", data);
 
-      // Check if payment was created successfully
       if (data.success && data.data && data.data.url) {
         console.log("Redirecting to Stripe checkout:", data.data.url);
-        // Redirect to Stripe Checkout
         window.location.href = data.data.url;
         return;
       }
 
-      // More detailed error logging
       console.error("Payment creation failed:", {
         success: data.success,
         hasData: !!data.data,
@@ -45,6 +41,7 @@ const CourseCard = ({ course }) => {
       setIsPaying(false);
     }
   };
+
   return (
     <>
       {/* Course Card */}
@@ -99,7 +96,7 @@ const CourseCard = ({ course }) => {
               </span>
             </div>
 
-            {/* Activities */}
+            {/* Activities (Full List) */}
             <div className="mb-4">
               <p className="text-gray-700 font-semibold flex items-center gap-2 mb-2">
                 <Check className="w-4 h-4 text-green-600" />
@@ -113,7 +110,8 @@ const CourseCard = ({ course }) => {
             </div>
 
             {/* Pay Button */}
-            <button onClick={handlePay}
+            <button 
+              onClick={handlePay}
               disabled={isPaying}
               className={`mt-6 w-full px-4 py-3 text-white rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg ${isPaying ? 'bg-blue-300 cursor-not-allowed' : 'bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-700 hover:to-blue-800'}`}
               type="button"
@@ -151,22 +149,31 @@ const CourseContent = ({ tasks }) => (
   </div>
 );
 
-const TasksList = ({ tasks }) => (
-  <div className="flex flex-col gap-3">
-    <p className="text-gray-700 font-semibold flex items-center gap-2">
-      <Check className="w-4 h-4 text-green-600" />
-      <span>Activities</span>
-    </p>
-    <ul className="space-y-2 text-gray-600 ml-2">
-      {tasks.map((task, index) => (
-        <li key={index} className="flex items-start">
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-purple-500 mt-2 mr-2"></span>
-          <span>{task}</span>
-        </li>
-      ))}
-    </ul>
-  </div>
-);
+const TasksList = ({ tasks }) => {
+  const previewTasks = tasks.slice(0, 3); 
+
+  return (
+    <div className="flex flex-col gap-3">
+      <p className="text-gray-700 font-semibold flex items-center gap-2">
+        <Check className="w-4 h-4 text-green-600" />
+        <span>Activities</span>
+      </p>
+      <ul className="space-y-2 text-gray-600 ml-2">
+        {previewTasks.map((task, index) => (
+          <li key={index} className="flex items-start">
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-purple-500 mt-2 mr-2"></span>
+            <span>{task}</span>
+          </li>
+        ))}
+        {tasks.length > 3 && (
+          <li className="text-blue-600 text-sm italic ml-4">
+            + {tasks.length - 3} more...
+          </li>
+        )}
+      </ul>
+    </div>
+  );
+};
 
 const EnrollButton = ({ onClick }) => (
   <button

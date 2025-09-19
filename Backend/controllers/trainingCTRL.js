@@ -4,6 +4,7 @@ import Training from "../models/trainingProgram.js";
 export const createTrainingProgram = async (req, res) => {
   try {
     const { week, title, task, resources, price } = req.body;
+    console.log(req.body);
     if (!week || !title || !task || !resources || !price)
       return res
         .status(400)
@@ -17,6 +18,7 @@ export const createTrainingProgram = async (req, res) => {
         .json({ msg: "Price can't be negative", success: false });
 
     const existingTraining = await Training.findOne({
+      week,
       title: normalizeTitle,
       task,
       resources,
