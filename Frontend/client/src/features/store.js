@@ -6,11 +6,15 @@ import paidCourseSlice from './paidCourses/paidCourses';
 
 import authSlice from './auth/loginSlice';
 import courseSlice from './courses/courseSlice';
+import feedbackSlice from './feedback/feedbackSlice';
+import petSlice from './pets/petSlice';
 // Combine all your slices
 const rootReducer = combineReducers({
   auth: authSlice,
   course: courseSlice,
-  paidCourse:paidCourseSlice
+  paidCourse: paidCourseSlice,
+  feedback: feedbackSlice,
+  pets: petSlice
 });
 
 // Configuration for redux-persist

@@ -55,7 +55,7 @@ export const Profile = () => {
           {/* Header */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-8">
             <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+              <div className="w-16 h-16 bg-blue-700 rounded-full flex items-center justify-center">
                 <span className="text-white text-xl font-bold">
                   {user?.name?.charAt(0)?.toUpperCase() ||
                     user?.email?.charAt(0)?.toUpperCase() ||

@@ -8,6 +8,7 @@ const CourseContent = lazy(() => import("./pages/CourseContent"));
 const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
 const PaymentCancel = lazy(() => import("./pages/PaymentCancel"));
 const PetPage = lazy(() => import("./pages/PetPage"));
+const PetManagement = lazy(() => import("./pages/PetManagement"));
 const Contact = lazy(() => import("./pages/Contact"));
 const SignUp = lazy(() => import("./components/auth/Signup"));
 const Login = lazy(() => import("./components/auth/Login"));
@@ -48,6 +49,14 @@ const App = () => {
             element={
               <Suspense fallback={<LoadingSpinner />}>
                 <PetPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/pets"
+            element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <PetManagement />
               </Suspense>
             }
           />

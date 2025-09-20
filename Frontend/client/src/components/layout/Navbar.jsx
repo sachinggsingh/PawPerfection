@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Home, Info, FileType, Mail, PawPrint, User } from 'lucide-react';
+import { Menu, X, Home, Info, FileType, Mail, PawPrint, User, Heart } from 'lucide-react';
 import Avatar from '../Avatar';
 import { useSelector  } from 'react-redux';
 
@@ -42,8 +42,9 @@ const Navbar = () => {
             {user ? (
               <>
                 <NavLink href='/' icon={<Home size={18} />} text="Home" />
-                <NavLink href="/contact" icon={<Mail size={18} />} text="Contact" />
                 <NavLink href="/course" icon={<FileType size={18} />} text="Courses" />
+                <NavLink href="/contact" icon={<Mail size={18} />} text="Contact" />
+                <NavLink href="/pets" icon={<Heart size={18} />} text="My Pets" />
                 <Avatar />
               </>
             ) : (
@@ -80,6 +81,7 @@ const Navbar = () => {
               <MobileNavLink href="/" icon={<Home size={18} />} text="Home" />
               <MobileNavLink href="/contact" icon={<Mail size={18} />} text="Contact" />
               <MobileNavLink href="/course" icon={<FileType size={18} />} text="Courses" />
+              <MobileNavLink href="/pets" icon={<Heart size={18} />} text="My Pets" />
               <div className="mt-4 px-4">
                 <Avatar />
               </div>
