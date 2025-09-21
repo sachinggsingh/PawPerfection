@@ -16,6 +16,70 @@ router.get('/health', (req, res) => {
     });
 });
 
+// Test endpoint to send payment confirmation email
+router.post('/test-payment-email', async (req, res) => {
+    try {
+        const { userEmail, userName, courseTitle, courseWeek, courseId, amount, paymentId } = req.body;
+        
+        if (!userEmail) {
+            return res.status(400).json({ error: 'userEmail is required' });
+        }
+
+        console.log('Testing payment confirmation email to:', userEmail);
+
+        await sendPaymentConfirmationEmail({
+            userEmail: userEmail,
+            userName: userName || userEmail.split('@')[0],
+            courseTitle: courseTitle || 'Test Course',
+            courseWeek: courseWeek || 1,
+            courseId: courseId || 'test-course-id',
+            amount: amount || 100,
+            paymentId: paymentId || 'test-payment-id',
+            paymentDate: new Date()
+        });
+
+        res.json({ 
+            success: true, 
+            message: 'Payment confirmation email sent successfully',
+            userEmail: userEmail
+        });
+    } catch (error) {
+        console.error('Test payment email error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Test endpoint to send payment cancellation email
+router.post('/test-cancellation-email', async (req, res) => {
+    try {
+        const { userEmail, userName, courseTitle, courseWeek, amount, reason } = req.body;
+        
+        if (!userEmail) {
+            return res.status(400).json({ error: 'userEmail is required' });
+        }
+
+        console.log('Testing payment cancellation email to:', userEmail);
+
+        await sendPaymentCancellationEmail({
+            userEmail: userEmail,
+            userName: userName || userEmail.split('@')[0],
+            courseTitle: courseTitle || 'Test Course',
+            courseWeek: courseWeek || 1,
+            amount: amount || 100,
+            reason: reason || 'Test cancellation'
+        });
+
+        res.json({ 
+            success: true, 
+            message: 'Payment cancellation email sent successfully',
+            userEmail: userEmail
+        });
+    } catch (error) {
+        console.error('Test cancellation email error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Debug endpoint to manually trigger webhook events (for testing)
 router.post('/debug-trigger', async (req, res) => {
     try {
@@ -59,6 +123,9 @@ router.post('/debug-trigger', async (req, res) => {
 
 // Stripe webhook endpoint
 router.post('/stripe-webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+    console.log('Webhook endpoint hit - Headers:', req.headers);
+    console.log('Webhook endpoint hit - Body length:', req.body?.length);
+    
     const sig = req.headers['stripe-signature'];
     const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -143,7 +210,7 @@ async function handlePaymentSuccess(session) {
         try {
             await sendPaymentConfirmationEmail({
                 userEmail: payment.userId.email,
-                userName: payment.userId.name || payment.userId.email,
+                userName: payment.userId.name || payment.userId.email.split('@')[0],
                 courseTitle: payment.trainingProgramId.title,
                 courseWeek: payment.trainingProgramId.week,
                 courseId: payment.trainingProgramId._id,
@@ -197,7 +264,7 @@ async function handlePaymentExpired(session) {
         try {
             await sendPaymentCancellationEmail({
                 userEmail: payment.userId.email,
-                userName: payment.userId.name || payment.userId.email,
+                userName: payment.userId.name || payment.userId.email.split('@')[0],
                 courseTitle: payment.trainingProgramId.title,
                 courseWeek: payment.trainingProgramId.week,
                 amount: payment.price,
@@ -244,7 +311,7 @@ async function handlePaymentFailed(paymentIntent) {
         try {
             await sendPaymentCancellationEmail({
                 userEmail: payment.userId.email,
-                userName: payment.userId.name || payment.userId.email,
+                userName: payment.userId.name || payment.userId.email.split('@')[0],
                 courseTitle: payment.trainingProgramId.title,
                 courseWeek: payment.trainingProgramId.week,
                 amount: payment.price,
@@ -291,7 +358,7 @@ async function handlePaymentCanceled(paymentIntent) {
         try {
             await sendPaymentCancellationEmail({
                 userEmail: payment.userId.email,
-                userName: payment.userId.name || payment.userId.email,
+                userName: payment.userId.name || payment.userId.email.split('@')[0],
                 courseTitle: payment.trainingProgramId.title,
                 courseWeek: payment.trainingProgramId.week,
                 amount: payment.price,
@@ -340,7 +407,7 @@ async function handlePaymentIntentSucceeded(paymentIntent) {
             try {
                 await sendPaymentConfirmationEmail({
                     userEmail: payment.userId.email,
-                    userName: payment.userId.name || payment.userId.email,
+                    userName: payment.userId.name || payment.userId.email.split('@')[0],
                     courseTitle: payment.trainingProgramId.title,
                     courseWeek: payment.trainingProgramId.week,
                     courseId: payment.trainingProgramId._id,

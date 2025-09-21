@@ -1,14 +1,27 @@
 import nodemailer from 'nodemailer';
+import User from '../models/user.js';
 
 const createTransporter = () => {
+    // Validate environment variables
+    if (!process.env.SMTP_EMAIL || !process.env.SMTP_PASSWORD) {
+        throw new Error('SMTP_EMAIL and SMTP_PASSWORD environment variables are required');
+    }
+
+    console.log('Creating email transporter with:', {
+        email: process.env.SMTP_EMAIL,
+        hasPassword: !!process.env.SMTP_PASSWORD
+    });
+
     return nodemailer.createTransport({
         service: 'gmail', 
         auth: {
-            user: process.env.STMP_EMAIL, 
+            user: process.env.SMTP_EMAIL, 
             pass: process.env.SMTP_PASSWORD 
         }
     });
 };
+
+console.log("Email service initialized.");
 
 // Email templates
 const getConfirmationEmailTemplate = (data) => {
@@ -348,20 +361,38 @@ const getLoginEmailTemplate = (data) => {
 // Send payment confirmation email
 export const sendPaymentConfirmationEmail = async (data) => {
     try {
+        console.log('Attempting to send payment confirmation email to:', data.userEmail);
+        
+        // Validate required data
+        if (!data.userEmail) {
+            throw new Error('userEmail is required for payment confirmation');
+        }
+
         const transporter = createTransporter();
         
         const mailOptions = {
-            from: process.env.STMP_EMAIL,
+            from: process.env.SMTP_EMAIL,
             to: data.userEmail,
             subject: `Payment Confirmed - ${data.courseTitle} | PawPerfection`,
             html: getConfirmationEmailTemplate(data)
         };
 
+        console.log('Sending payment confirmation email with options:', {
+            from: mailOptions.from,
+            to: mailOptions.to,
+            subject: mailOptions.subject
+        });
+
         const result = await transporter.sendMail(mailOptions);
-        console.log('Confirmation email sent successfully:', result.messageId);
+        console.log('Payment confirmation email sent successfully:', result.messageId);
         return result;
     } catch (error) {
-        console.error('Error sending confirmation email:', error);
+        console.error('Error sending payment confirmation email:', {
+            error: error.message,
+            stack: error.stack,
+            userEmail: data.userEmail,
+            courseTitle: data.courseTitle
+        });
         throw error;
     }
 };
@@ -371,7 +402,7 @@ export const sendPaymentCancellationEmail = async (data) => {
         const transporter = createTransporter();
         
         const mailOptions = {
-            from: process.env.STMP_EMAIL,
+            from: process.env.SMTP_EMAIL,
             to: data.userEmail,
             subject: `Payment Update - ${data.courseTitle} | PawPerfection`,
             html: getCancellationEmailTemplate(data)
@@ -388,20 +419,37 @@ export const sendPaymentCancellationEmail = async (data) => {
 // Send login notification email
 export const sendLoginNotificationEmail = async (data) => {
     try {
+        console.log('Attempting to send login notification email to:', data.userEmail);
+        
+        // Validate required data
+        if (!data.userEmail) {
+            throw new Error('userEmail is required for login notification');
+        }
+
         const transporter = createTransporter();
         
         const mailOptions = {
-            from: process.env.STMP_EMAIL,
+            from: process.env.SMTP_EMAIL,
             to: data.userEmail,
             subject: `New Login Alert | PawPerfection`,
             html: getLoginEmailTemplate(data)
         };
 
+        console.log('Sending email with options:', {
+            from: mailOptions.from,
+            to: mailOptions.to,
+            subject: mailOptions.subject
+        });
+
         const result = await transporter.sendMail(mailOptions);
-        console.log('Login notification email sent:', result.messageId);
+        console.log('Login notification email sent successfully:', result.messageId);
         return result;
     } catch (error) {
-        console.error('Error sending login email:', error);
+        console.error('Error sending login email:', {
+            error: error.message,
+            stack: error.stack,
+            userEmail: data.userEmail
+        });
         throw error;
     }
 };

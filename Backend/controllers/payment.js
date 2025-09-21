@@ -1,6 +1,7 @@
 import Payment from "../models/payment.js"
 import Training from "../models/trainingProgram.js"
 import { stripe } from "../utils/payment.js"
+import { sendPaymentConfirmationEmail } from "../utils/emailService.js"
 
 if(!stripe){
     throw new Error("Stripe is not defined")
@@ -261,6 +262,24 @@ export const verifyPayment = async (req, res) => {
             const updatedPayment = await Payment.findById(payment._id)
                 .populate('userId', 'name email')
                 .populate('trainingProgramId', 'title week description');
+
+            // Send confirmation email
+            try {
+                await sendPaymentConfirmationEmail({
+                    userEmail: updatedPayment.userId.email,
+                    userName: updatedPayment.userId.name || updatedPayment.userId.email.split('@')[0],
+                    courseTitle: updatedPayment.trainingProgramId.title,
+                    courseWeek: updatedPayment.trainingProgramId.week,
+                    courseId: updatedPayment.trainingProgramId._id,
+                    amount: updatedPayment.price,
+                    paymentId: updatedPayment._id,
+                    paymentDate: new Date()
+                });
+                console.log('Payment confirmation email sent to:', updatedPayment.userId.email);
+            } catch (emailError) {
+                console.error('Failed to send confirmation email:', emailError);
+                // Don't fail the verification if email fails
+            }
 
             return res.status(200).json({
                 msg: "Payment verified and updated successfully",

@@ -1,6 +1,7 @@
 import User from "../models/user.js";
 import { hash, compare } from "bcrypt";
 import { generateTokens, verifyRefreshToken } from "../utils/jwtUtils.js";
+import {sendLoginNotificationEmail} from "../utils/emailService.js"
 
 export const createUser = async (req, res) => {
   try {
@@ -66,7 +67,7 @@ export const loginUSer = async (req, res) => {
     if (!user) {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
-
+    
     const isMatch = compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ msg: "Invalid credentials" });
@@ -77,6 +78,23 @@ export const loginUSer = async (req, res) => {
     
     // Update user's refresh token in database
     await User.findByIdAndUpdate(user._id, { refreshToken: refreshToken });
+
+
+    // Send login notification email
+    try {
+      await sendLoginNotificationEmail({
+        userEmail: user.email,
+        userName: user.name || user.email.split('@')[0],
+        loginDate: new Date(),
+        ip: req.ip,
+        device: req.headers['user-agent'],
+        location: 'Unknown'
+      });
+      console.log('Login notification email sent successfully to:', user.email);
+    } catch (emailError) {
+      console.error('Failed to send login notification email:', emailError);
+      // Don't fail the login if email fails
+    }
     
     return res.status(200).json({
       msg: "Login successful",
@@ -198,6 +216,22 @@ export const googleAuthCallback = async (req, res) => {
     
     // Update user's refresh token in database
     await User.findByIdAndUpdate(user._id, { refreshToken: refreshToken });
+
+    // Send login notification email for Google OAuth login
+    try {
+      await sendLoginNotificationEmail({
+        userEmail: user.email,
+        userName: user.name || user.email.split('@')[0],
+        loginDate: new Date(),
+        ip: req.ip,
+        device: req.headers['user-agent'],
+        location: 'Unknown'
+      });
+      console.log('Login notification email sent successfully to:', user.email);
+    } catch (emailError) {
+      console.error('Failed to send login notification email:', emailError);
+      // Don't fail the login if email fails
+    }
     
     // Redirect to frontend with tokens as URL parameters
     const redirectUrl = `http://localhost:5173/auth/callback?accessToken=${accessToken}&refreshToken=${refreshToken}&userId=${user._id}&email=${encodeURIComponent(user.email)}`;

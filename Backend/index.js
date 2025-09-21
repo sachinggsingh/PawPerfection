@@ -16,6 +16,7 @@ import trainingRoutes from './routes/trainingRoutes.js';
 import feedBackRoutes from './routes/feedBack.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import webhookRoutes from './webhook/stripe.webhook.js';
+import emailTestRoutes from './routes/emailTest.js';
     
 
 
@@ -34,6 +35,16 @@ if (!process.env.JWT_SECRET) {
 // Check if JWT_REFRESH_SECRET is defined (optional, will use JWT_SECRET if not provided)
 if (!process.env.JWT_REFRESH_SECRET) {
     console.warn('JWT_REFRESH_SECRET is not defined, using JWT_SECRET for refresh tokens');
+}
+
+// Check if email configuration is defined
+if (!process.env.SMTP_EMAIL || !process.env.SMTP_PASSWORD) {
+    console.warn('SMTP_EMAIL or SMTP_PASSWORD is not defined - email functionality will not work');
+}
+
+// Check if FRONTEND_URL is defined
+if (!process.env.FRONTEND_URL) {
+    console.warn('FRONTEND_URL is not defined - email links may not work properly');
 }
 
 // Mount webhook BEFORE body parsers to preserve raw body for signature verification
@@ -86,6 +97,7 @@ app.use('/api/pet', petRoutes);
 app.use('/api/training', trainingRoutes);    
 app.use('/api/feedback', feedBackRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/email-test', emailTestRoutes);
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
