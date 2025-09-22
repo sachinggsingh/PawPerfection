@@ -141,7 +141,7 @@ export default function PetManagement() {
                 My Pets
               </h1>
               <p className="text-gray-600 text-lg">
-                Manage your pet profiles and training information
+                Manage your pet profiles.
               </p>
             </div>
             <button
