@@ -176,7 +176,7 @@ export default function PetManagement() {
 
           {/* Pet Form Modal */}
           {showForm && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">
               <div className="bg-white rounded-2xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-2xl font-bold text-gray-800">
@@ -184,7 +184,7 @@ export default function PetManagement() {
                   </h2>
                   <button
                     onClick={resetForm}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="cursor-pointer text-gray-500 hover:text-gray-700"
                   >
                     <X className="w-6 h-6" />
                   </button>
