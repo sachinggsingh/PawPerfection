@@ -3,8 +3,16 @@ import { hash, compare } from "bcrypt";
 import { generateTokens, verifyRefreshToken } from "../utils/jwtUtils.js";
 import {sendLoginNotificationEmail} from "../utils/emailService.js"
 
+import {userValidationSchema, loginValidationSchema} from "../validations/signup.validations.js"
+
 export const createUser = async (req, res) => {
   try {
+    // Validate input using Zod schema
+    const validateResult = userValidationSchema.safeParse(req.body);
+    if (!validateResult.success) {
+      const errors = validateResult.error.errors.map(err => err.message);
+      return res.status(400).json({ msg: "Validation failed", errors });
+    }
     const { email, password } = req.body;
     console.log(req.body);
     if (!email || !password) {
@@ -58,6 +66,11 @@ export const createUser = async (req, res) => {
 
 export const loginUSer = async (req, res) => {
   try {
+    const loginValidation = loginValidationSchema.safeParse(req.body);
+    if (!loginValidation.success) {
+      const errors = loginValidation.error.errors.map(err => err.message);
+      return res.status(400).json({ msg: "Validation failed", errors });
+    }
     const { email, password } = req.body;
     if (!email || !password) {
       return res.status(400).json({ msg: "All fields are required" });
