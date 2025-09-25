@@ -356,6 +356,103 @@ const getLoginEmailTemplate = (data) => {
     </html>
     `;
 };
+const sessionExpiredForPayment = (data) => {
+  return `
+  <!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Payment Session Expired - PawPerfection</title>
+      <style>
+          body {
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              line-height: 1.6;
+              color: #333;
+              max-width: 600px;
+              margin: 0 auto;
+              padding: 20px;
+              background-color: #f4f4f4;
+          }
+          .container {
+              background-color: white;
+              padding: 30px;
+              border-radius: 10px;
+              box-shadow: 0 0 20px rgba(0,0,0,0.1);
+          }
+          .header {
+              text-align: center;
+              border-bottom: 3px solid #ff6b6b;
+              padding-bottom: 20px;
+              margin-bottom: 30px;
+          }
+          .logo {
+              font-size: 28px;
+              font-weight: bold;
+              color: #ff6b6b;
+              margin-bottom: 10px;
+          }
+          .info {
+              background-color: #f8f9fa;
+              padding: 20px;
+              border-radius: 8px;
+              margin: 20px 0;
+              border-left: 4px solid #ff6b6b;
+          }
+          .footer {
+              text-align: center;
+              margin-top: 30px;
+              padding-top: 20px;
+              border-top: 1px solid #eee;
+              color: #666;
+              font-size: 14px;
+          }
+          .button {
+              display: inline-block;
+              background-color: #4CAF50;
+              color: white;
+              padding: 12px 30px;
+              text-decoration: none;
+              border-radius: 5px;
+              margin: 20px 0;
+              font-weight: bold;
+          }
+      </style>
+  </head>
+  <body>
+      <div class="container">
+          <div class="header">
+              <div class="logo">🐾 PawPerfection</div>
+              <h1>Payment Session Expired</h1>
+          </div>
+          
+          <p>Hi ${data.userName},</p>
+          <p>Your recent payment session for <strong>${data.productName || "your order"}</strong> has expired.</p>
+          
+          <div class="info">
+              <p><strong>Order ID:</strong> ${data.orderId || "Not available"}</p>
+              <p><strong>Amount:</strong> ${data.amount ? "₹" + data.amount : "Not specified"}</p>
+              <p><strong>Session Expired At:</strong> ${data.expiredAt ? data.expiredAt.toLocaleString() : "Unknown"}</p>
+          </div>
+          
+          <p>No payment was processed for this order. To complete your purchase, please try again by starting a new session.</p>
+          
+          <div style="text-align: center;">
+              <a href="${process.env.FRONTEND_URL}/checkout" class="button">
+                  Retry Payment
+              </a>
+          </div>
+          
+          <div class="footer">
+              <p>Thank you for choosing PawPerfection 🐾</p>
+              <p><small>This is an automated email. Please do not reply to this message.</small></p>
+          </div>
+      </div>
+  </body>
+  </html>
+  `;
+};
+
 
 
 // Send payment confirmation email
@@ -454,3 +551,24 @@ export const sendLoginNotificationEmail = async (data) => {
     }
 };
 
+export const sendSessionExpiredForPayment = async(data)=>{
+    try{
+        console.log("Session expired email function called");
+        if(!data.userEmail){
+            throw new Error("userEmail is required for session expired email");
+        }
+        const transporter = createTransporter();
+        const mailOptions = {
+            from: process.env.SMTP_EMAIL,
+            to: data.userEmail,
+            subject: `Session Expired - PawPerfection`,
+            html: sessionExpiredForPayment(data)
+        };
+        const result = await transporter.sendMail(mailOptions);
+        console.log("Session expired email sent successfully:", result.messageId);
+        return result;
+    }catch(error){
+        console.error("Error sending session expired email:", error);
+        throw error;
+    }
+}

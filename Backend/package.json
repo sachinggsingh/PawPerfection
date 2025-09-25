@@ -17,6 +17,7 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
+    "express-rate-limit": "^6.11.2",
     "express-session": "^1.18.2",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.18.0",

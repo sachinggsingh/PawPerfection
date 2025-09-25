@@ -3,7 +3,7 @@ import { stripe } from '../utils/payment.js';
 import Payment from '../models/payment.js';
 import Training from '../models/trainingProgram.js';
 import User from '../models/user.js';
-import { sendPaymentConfirmationEmail, sendPaymentCancellationEmail } from '../utils/emailService.js';
+import { sendPaymentConfirmationEmail, sendPaymentCancellationEmail ,sendSessionExpiredForPayment} from '../utils/emailService.js';
 
 const router = express.Router();
 
@@ -250,6 +250,19 @@ async function handlePaymentExpired(session) {
         if (!payment) {
             console.error('Payment record not found for expired session:', session.id);
             return;
+        }
+        try{
+            await sendSessionExpiredForPayment({
+                userEmail: payment.userId.email,
+                userName: payment.userId.name || payment.userId.email.split('@')[0],
+                courseTitle: payment.trainingProgramId.title,
+                courseWeek: payment.trainingProgramId.week,
+                amount: payment.price,
+                reason: 'Payment session expired'
+            });
+            console.log('Session expired email sent to:', payment.userId.email);
+        }catch(emailError){
+            console.error('Failed to send session expired email:', emailError);
         }
 
         // Update payment status

@@ -7,6 +7,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import passport from './utils/passport.js';
+import rateLimiter from 'express-rate-limit';
 
 
 // import auth from './middleware/auth';
@@ -46,6 +47,13 @@ if (!process.env.SMTP_EMAIL || !process.env.SMTP_PASSWORD) {
 if (!process.env.FRONTEND_URL) {
     console.warn('FRONTEND_URL is not defined - email links may not work properly');
 }
+
+// Rate Limiter Middleware
+const limitter = rateLimiter({
+    windowMs: 2 * 60 * 1000, // 15 minutes
+    max: 3, // limit each IP to 100 requests per windowMs
+    message: 'Too many requests from this IP, please try again after 2 minutes'
+})
 
 // Mount webhook BEFORE body parsers to preserve raw body for signature verification
 app.use('/api/webhook', webhookRoutes);
@@ -96,7 +104,7 @@ app.use('/api/auth', userRoutes);
 app.use('/api/pet', petRoutes);
 app.use('/api/training', trainingRoutes);    
 app.use('/api/feedback', feedBackRoutes);
-app.use('/api/payment', paymentRoutes);
+app.use('/api/payment',limitter, paymentRoutes);
 app.use('/api/email-test', emailTestRoutes);
 
 const PORT = process.env.PORT
