@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import passport from './utils/passport.js';
 import rateLimiter from 'express-rate-limit';
+import helmet from 'helmet';
 
 
 // import auth from './middleware/auth';
@@ -59,6 +60,7 @@ const limitter = rateLimiter({
 app.use('/api/webhook', webhookRoutes);
 
 app.use(json());
+app.use(helmet());
 app.use(urlencoded({ extended: true }));
 // app.use(static('public'));
 const corsOptions = {
