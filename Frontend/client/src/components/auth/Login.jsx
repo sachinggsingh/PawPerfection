@@ -4,7 +4,6 @@ import { Eye, EyeOff } from "lucide-react";
 import { login } from "../../features/auth/loginSlice";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingSpinner from "../common/LoadingSpinner";
-import LoginImage from "../../assets/Login.jpg"; // Import your image
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -49,10 +48,10 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center px-4 py-10 ">
-      <div className="w-full max-w-4xl flex bg-white  rounded-xl animate-slideUp overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center px-4 py-10 bg-gray-100">
+      <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8 animate-slideUp">
         {/* Left: Login Form */}
-        <div className="w-full md:w-1/2 p-8 flex flex-col justify-center">
+        <div className="w-full">
           <h2 className="text-2xl font-bold text-center text-gray-800">
             Welcome Back!
           </h2>
@@ -124,7 +123,7 @@ const Login = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full cursor-pointer p-2 border-outline px-4 bg-gray-200 hover:bg-gray-400 text-black font-semibold rounded-md shadow transition"
+              className="w-full cursor-pointer p-2 bg-gray-200 hover:bg-gray-400 text-black font-semibold rounded-md shadow transition"
             >
               {loading ? <LoadingSpinner /> : "Sign in"}
             </button>
@@ -141,7 +140,7 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Google Sign In Button */}
+            {/* Google Sign In */}
             <button
               type="button"
               onClick={() =>
@@ -181,15 +180,6 @@ const Login = () => {
               </Link>
             </p>
           </form>
-        </div>
-
-        {/* Right: Image */}
-        <div className="hidden md:block md:w-1/2">
-          <img
-            src={LoginImage}
-            alt="Login"
-            className="h-full w-full object-cover"
-          />
         </div>
       </div>
     </div>
