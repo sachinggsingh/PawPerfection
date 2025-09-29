@@ -1,0 +1,17 @@
+version: ''
+services:
+  mongodb:
+  frontend:
+    image: "pawperfection_frontend"
+    ports: 
+      - "5173:5173"
+    depends_on:
+      - backend
+  backend:
+    image: "pawperfection_backend"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongodb:
+    env_file:
+      - ./backend/.env
